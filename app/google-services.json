@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "847537115058",
+    "firebase_url": "https://gymgo-fbcac.firebaseio.com",
+    "project_id": "gymgo-fbcac",
+    "storage_bucket": "gymgo-fbcac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847537115058:android:445aa7a8361c46e0",
+        "android_client_info": {
+          "package_name": "com.example.giner.gymgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847537115058-877j4mo80l0ubd8l85a5mkf2gfem74k5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiEFxzhcxvhBCp2grAdn8Qu2-i_Pv1hhs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

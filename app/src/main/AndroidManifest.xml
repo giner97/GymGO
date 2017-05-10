@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.giner.gymgo">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logogymgo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/logogymgo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Gymgo.LoginActivity"
+            android:label="GymGO"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Gymgo.registroActivity"
+            android:label="Registrar usuario"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Gymgo.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Gymgo.RecuperarPassActivity"
+            android:label="Recuperar contraseña"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Gymgo.LoginActivityMuestra"
+            android:label="" />
+        <activity android:name=".Gymgo.RutinasActivity" />
+        <activity android:name=".Gymgo.DietasActivity" />
+        <activity android:name=".Gymgo.RevisionesActivity" />
+        <activity android:name=".Gymgo.PGCActivity"></activity>
+    </application>
+
+</manifest>

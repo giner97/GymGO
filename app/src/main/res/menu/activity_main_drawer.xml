@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/datos"
+            android:title="Ver o modificar datos" />
+        <item
+            android:id="@+id/cambiarCorreo"
+            android:title="Cambiar correo electrónico" />
+        <item
+            android:id="@+id/cambiarPass"
+            android:title="Cambiar contraseña" />
+        <item
+            android:id="@+id/eliminarUser"
+            android:title="Eliminar usuario" />
+        <item
+            android:id="@+id/cerrarSesion"
+            android:title="Cerrar Sesión" />
+    </group>
+
+</menu>
