@@ -1,5 +1,7 @@
 package com.example.giner.gymgo.Objetos;
 
+import java.util.ArrayList;
+
 public class Rutina {
 
 	private int id_rutina;
@@ -7,6 +9,7 @@ public class Rutina {
 	private int cantidad_dias;
 	private int objetivo;
 	private int id_usuario;
+	private ArrayList<Rutina_Ejercicio>ejercicios;
 	
 	public int getId_rutina() {
 		return id_rutina;
@@ -38,10 +41,15 @@ public class Rutina {
 	public void setId_usuario(int id_usuario) {
 		this.id_usuario = id_usuario;
 	}
+	public ArrayList<Rutina_Ejercicio> getEjercicios() {
+		return ejercicios;
+	}
+	public void setEjercicios(ArrayList<Rutina_Ejercicio> ejercicios) {
+		this.ejercicios = ejercicios;
+	}
 
 	public String toString(){
 		return "Rutina "+this.id_rutina;
 	}
-	
-	
+
 }

@@ -10,7 +10,7 @@ public class Usuario {
 	private int altura;
 	private int objetivo;
 	private int revision;
-	private int rutina;
+	private Rutina_User rutina;
 	private int dieta;
 	
 	
@@ -62,10 +62,10 @@ public class Usuario {
 	public void setRevision(int revision) {
 		this.revision = revision;
 	}
-	public int getRutina() {
+	public Rutina_User getRutina() {
 		return rutina;
 	}
-	public void setRutina(int rutina) {
+	public void setRutina(Rutina_User rutina) {
 		this.rutina = rutina;
 	}
 	public int getDieta() {

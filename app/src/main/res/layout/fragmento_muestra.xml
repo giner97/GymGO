@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/dia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Dia"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/dato1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dia"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:text="Dato 1" />
+
+    <TextView
+        android:id="@+id/dato2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dato1"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:text="Dato 2" />
+
+    <TextView
+        android:id="@+id/dato3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dato2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:text="Dato 3" />
+
+    <TextView
+        android:id="@+id/dato4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dato3"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:text="Dato 4" />
+
+    <TextView
+        android:id="@+id/dato5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dato4"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:text="Dato 5" />
+</RelativeLayout>

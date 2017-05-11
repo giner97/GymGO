@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
-public class Muestras_Dialog extends DialogFragment implements AdapterView.OnItemClickListener{
+public class MuestraListView_Dialog extends DialogFragment implements AdapterView.OnItemClickListener{
 
     //Widgets
 
@@ -44,7 +44,7 @@ public class Muestras_Dialog extends DialogFragment implements AdapterView.OnIte
 
     //Constructores
 
-        public Muestras_Dialog(ArrayList<Rutina>rutinas,ArrayList<Dieta>dietas){
+        public MuestraListView_Dialog(ArrayList<Rutina>rutinas, ArrayList<Dieta>dietas){
             if(dietas==null) {
                 this.rutinas = rutinas;
                 tipoArray = "rutina";
@@ -63,7 +63,7 @@ public class Muestras_Dialog extends DialogFragment implements AdapterView.OnIte
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("Selecciona una "+tipoArray);
-        View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_muestras, null);
+        View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_muestralistviews, null);
 
         //Instancio los widgets
 

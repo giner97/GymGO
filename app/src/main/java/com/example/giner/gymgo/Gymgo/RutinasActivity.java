@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.example.giner.gymgo.Objetos.Dieta;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
-public class RutinasActivity extends AppCompatActivity implements View.OnClickListener, numDias_Dialog.OnNumDialog, Muestras_Dialog.DialogMuestrasListener {
+public class RutinasActivity extends AppCompatActivity implements View.OnClickListener, numDias_Dialog.OnNumDialog, MuestraListView_Dialog.DialogMuestrasListener, MuestraDatos_Dialog.OnListener{
 
     //Widgets
 
@@ -47,8 +46,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
         private ArrayList<Rutina> rutinasArray = new ArrayList<>();
         private ArrayAdapter<Rutina> arrayAdapterRutinas;
-        private Muestras_Dialog muestraRutinas;
+        private MuestraListView_Dialog muestraRutinas;
         private Rutina rutinaCambio;
+        private MuestraDatos_Dialog dialogoMuestraRutina;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +194,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialogInterface, int which) {
                 objetivoSeleccionado = objetivoSelecc+1;
                 muestraDialgoRutinas();
-
             }
         });
 
@@ -279,17 +278,27 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onMuestraRutina(Rutina rutina) {
-        this.rutinaCambio=rutina;
-        Toasty.success(RutinasActivity.this,rutinaCambio.toString(),Toast.LENGTH_SHORT).show();
+        transaction = getFragmentManager().beginTransaction();
+        dialogoMuestraRutina = new MuestraDatos_Dialog(rutina,null);
+        dialogoMuestraRutina.setListener(this);
+        dialogoMuestraRutina.show(transaction,null);
+        dialogoMuestraRutina.setCancelable(false);
     }
 
     public void llamaDialogo(){
         //Llamo al dialogo
         transaction = getFragmentManager().beginTransaction();
-        muestraRutinas=new Muestras_Dialog(rutinasArray,null);
+        muestraRutinas=new MuestraListView_Dialog(rutinasArray,null);
         muestraRutinas.setDialogMuestrasListener(this);
         muestraRutinas.show(transaction,null);
         muestraRutinas.setCancelable(false);
     }
 
+    @Override
+    public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
+
+        rutinaCambio=rutinaSeleccionada;
+        //Llamo al metodo para realizar el cambio.
+
+    }
 }
