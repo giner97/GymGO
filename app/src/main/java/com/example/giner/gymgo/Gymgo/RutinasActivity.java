@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.R;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
-public class RutinasActivity extends AppCompatActivity implements View.OnClickListener, numDias_Dialog.OnNumDialog {
+public class RutinasActivity extends AppCompatActivity implements View.OnClickListener, numDias_Dialog.OnNumDialog, Muestras_Dialog.DialogMuestrasListener {
 
     //Widgets
 
@@ -43,6 +45,10 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private int objetivoSelecc;
         private CharSequence[] objetivos;
         private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
+        private ArrayList<Rutina> rutinasArray = new ArrayList<>();
+        private ArrayAdapter<Rutina> arrayAdapterRutinas;
+        private Muestras_Dialog muestraRutinas;
+        private Rutina rutinaCambio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,11 +193,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 objetivoSeleccionado = objetivoSelecc+1;
-
-                /*Borrar el toasty y añadir el constructor del metodo para seleccionar la rutina
-
-                 */
-                Toasty.success(RutinasActivity.this,Integer.toString(objetivoSeleccionado),Toast.LENGTH_SHORT).show();
+                muestraDialgoRutinas();
 
             }
         });
@@ -234,6 +236,8 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     public void muestraDialgoRutinas(){
 
+        //Falta filtrar las rutinas
+
         //Recupero las rutinas de la bd
 
             DatabaseReference dbRutinas = FirebaseDatabase.getInstance().getReference().child("rutina");
@@ -246,12 +250,20 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                int numRutinas;
+
+                GenericTypeIndicator<ArrayList<Rutina>> t = new GenericTypeIndicator<ArrayList<Rutina>>() {};
+
+                rutinasArray = dataSnapshot.getValue(t);
+
+                llamaDialogo();
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-
+                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
         };
@@ -260,5 +272,24 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    @Override
+    public void onMuestraDieta(Dieta dieta) {
+        //Este metodo no se ejecuta en esta actividad, por lo que estara vacio
+    }
+
+    @Override
+    public void onMuestraRutina(Rutina rutina) {
+        this.rutinaCambio=rutina;
+        Toasty.success(RutinasActivity.this,rutinaCambio.toString(),Toast.LENGTH_SHORT).show();
+    }
+
+    public void llamaDialogo(){
+        //Llamo al dialogo
+        transaction = getFragmentManager().beginTransaction();
+        muestraRutinas=new Muestras_Dialog(rutinasArray,null);
+        muestraRutinas.setDialogMuestrasListener(this);
+        muestraRutinas.show(transaction,null);
+        muestraRutinas.setCancelable(false);
+    }
 
 }
