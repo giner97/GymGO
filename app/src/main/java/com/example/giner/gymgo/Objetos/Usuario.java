@@ -2,23 +2,39 @@ package com.example.giner.gymgo.Objetos;
 
 public class Usuario {
 
-	private int id_usuario;
+	private String uid;
 	private String nombre;
 	private String apellidos;
 	private String email;
 	private double peso;
 	private int altura;
 	private int objetivo;
-	private int revision;
+	private Revision_user revision;
 	private Rutina_User rutina;
 	private int dieta;
-	
-	
-	public int getId_usuario() {
-		return id_usuario;
+
+	public Usuario() {
+
 	}
-	public void setId_usuario(int id_usuario) {
-		this.id_usuario = id_usuario;
+
+	public Usuario(String uid, String nombre, String apellidos, String email, double peso, int altura, int objetivo, Revision_user revision, Rutina_User rutina, int dieta) {
+		this.uid = uid;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.email = email;
+		this.peso = peso;
+		this.altura = altura;
+		this.objetivo = objetivo;
+		this.revision = revision;
+		this.rutina = rutina;
+		this.dieta = dieta;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 	public String getNombre() {
 		return nombre;
@@ -56,10 +72,10 @@ public class Usuario {
 	public void setObjetivo(int objetivo) {
 		this.objetivo = objetivo;
 	}
-	public int getRevision() {
+	public Revision_user getRevision() {
 		return revision;
 	}
-	public void setRevision(int revision) {
+	public void setRevision(Revision_user revision) {
 		this.revision = revision;
 	}
 	public Rutina_User getRutina() {

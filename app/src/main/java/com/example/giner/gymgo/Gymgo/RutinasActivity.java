@@ -3,6 +3,7 @@ package com.example.giner.gymgo.Gymgo;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,7 +37,8 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     //Variables
 
-        int numDias;
+        private int numDias;
+        private String uidUser;
 
     //Variables
 
@@ -58,6 +60,11 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutinas);
+
+        //Recupero el uid del usuario loggeado
+
+            Intent recibeUID=getIntent();
+            uidUser=recibeUID.getStringExtra(MainActivity.KEY_UID);
 
         //Recupero los objetivos de la bd
 
@@ -318,7 +325,11 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         Rutina_User insercionRutina = new Rutina_User();
         insercionRutina.setId_rutina(rutinaSeleccionada.getId_rutina());
         insercionRutina.setDias(diasSemana);
+
         //Llamo al metodo para realizar el cambio.
+
+            DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+            dbUpdateRutina.child("rutina").setValue(insercionRutina);
 
     }
 }

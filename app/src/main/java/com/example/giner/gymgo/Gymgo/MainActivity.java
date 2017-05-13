@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.FragmentTransaction;
 
+import com.example.giner.gymgo.Objetos.Usuario;
 import com.example.giner.gymgo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
 
@@ -36,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         private static int claveEliminarUsuario=0;
         private static int claveCambiarContrasenya=1;
         private static int claveCambiarEmail=2;
+        public final static String KEY_UID="uid";
 
     //Widgets
 
@@ -67,6 +77,10 @@ public class MainActivity extends AppCompatActivity
         private Button botonRevision;
         private Button botonPGC;
 
+    //Objetos
+
+        private Usuario userDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +101,44 @@ public class MainActivity extends AppCompatActivity
                 }
             };
 
+        //Recupero el usuario de la bd
 
+        DatabaseReference dbUser = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
+
+        ValueEventListener eventListenerRutinas;
+
+        eventListenerRutinas = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //Si el usuario no existe en la bd (Se acaba de registrar), creo un nuevo usuario con su uid
+
+                if(dataSnapshot.exists()){
+                    userDatabase = dataSnapshot.getValue(Usuario.class);
+                }
+
+                else{
+
+                    DatabaseReference dbCreateUser = FirebaseDatabase.getInstance().getReference().child("User");
+                    Map<String, Usuario>crearUsuario = new HashMap<>();
+                    Usuario objetoCrearUsuario = new Usuario();
+                    objetoCrearUsuario.setEmail(userLogueado.getEmail());
+                    objetoCrearUsuario.setUid(userLogueado.getUid());
+                    crearUsuario.put(userLogueado.getUid(),objetoCrearUsuario);
+
+                    dbCreateUser.child(userLogueado.getUid()).setValue(objetoCrearUsuario);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        dbUser.addValueEventListener(eventListenerRutinas);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -301,16 +352,19 @@ public class MainActivity extends AppCompatActivity
 
         if(v.getId()==botonRutina.getId()){
             intencion = new Intent(this, RutinasActivity.class);
+            intencion.putExtra(KEY_UID, userDatabase.getUid());
             startActivity(intencion);
         }
 
         else if(v.getId()==botonDieta.getId()){
             intencion = new Intent(this, DietasActivity.class);
+            intencion.putExtra(KEY_UID, userDatabase.getUid());
             startActivity(intencion);
         }
 
         else if(v.getId()==botonRevision.getId()){
             intencion = new Intent(this, RevisionesActivity.class);
+            intencion.putExtra(KEY_UID, userDatabase.getUid());
             startActivity(intencion);
         }
 
