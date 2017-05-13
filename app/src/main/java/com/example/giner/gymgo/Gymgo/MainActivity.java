@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.datos) {
 
-
         }
         else if (id == R.id.cambiarCorreo) {
             creaDialogoReAutentificacion(claveCambiarEmail);

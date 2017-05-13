@@ -110,11 +110,7 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
         //Seteo el layout en el diálogo
 
         builder.setView(customDialog);
-
-        //Hago que el diálogo no sea cancelable pulsando fuera de él (diálogo modal)
-
         dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
 
         //Devuelvo el AlertDialog ya configurado
 

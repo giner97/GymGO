@@ -6,10 +6,10 @@ public class Rutina {
 
 	private int id_rutina;
 	private String descripcion_rutina;
-	private int cantidad_dias;
+	private int dias;
 	private int objetivo;
 	private int id_usuario;
-	private ArrayList<Rutina_Ejercicio>ejercicios;
+	private ArrayList<Rutina_Ejercicio> ejercicios;
 	
 	public int getId_rutina() {
 		return id_rutina;
@@ -23,11 +23,11 @@ public class Rutina {
 	public void setDescripcion_rutina(String descripcion_rutina) {
 		this.descripcion_rutina = descripcion_rutina;
 	}
-	public int getCantidad_dias() {
-		return cantidad_dias;
+	public int getDias() {
+		return dias;
 	}
-	public void setCantidad_dias(int cantidad_dias) {
-		this.cantidad_dias = cantidad_dias;
+	public void setDias(int dias) {
+		this.dias = dias;
 	}
 	public int getObjetivo() {
 		return objetivo;

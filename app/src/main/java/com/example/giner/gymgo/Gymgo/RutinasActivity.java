@@ -13,12 +13,14 @@ import android.widget.Toast;
 import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;
+import com.example.giner.gymgo.Objetos.Rutina_User;
 import com.example.giner.gymgo.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -45,10 +47,12 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private CharSequence[] objetivos;
         private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
         private ArrayList<Rutina> rutinasArray = new ArrayList<>();
+        private ArrayList<Rutina> rutinasFiltradas= new ArrayList<>();
         private ArrayAdapter<Rutina> arrayAdapterRutinas;
         private MuestraListView_Dialog muestraRutinas;
         private Rutina rutinaCambio;
         private MuestraDatos_Dialog dialogoMuestraRutina;
+        private ArrayList diasSemana = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +129,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         //Dialogo para la seleccion de los dias
             final AlertDialog.Builder builder = new AlertDialog.Builder(RutinasActivity.this);
 
-        final ArrayList diasSemana = new ArrayList();
         final CharSequence[] items = new CharSequence[7];
 
         items[0] = "Lunes";
@@ -255,6 +258,18 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
                 rutinasArray = dataSnapshot.getValue(t);
 
+                //Filtramos los resultados
+
+                rutinasFiltradas.clear();
+
+                    for(int i=0;i<rutinasArray.size();i++){
+                        if(rutinasArray.get(i).getObjetivo()==objetivoSeleccionado){
+                            if(rutinasArray.get(i).getDias()==numDias){
+                                rutinasFiltradas.add(rutinasArray.get(i));
+                            }
+                        }
+                    }
+
                 llamaDialogo();
 
             }
@@ -288,16 +303,19 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
     public void llamaDialogo(){
         //Llamo al dialogo
         transaction = getFragmentManager().beginTransaction();
-        muestraRutinas=new MuestraListView_Dialog(rutinasArray,null);
+        muestraRutinas=new MuestraListView_Dialog(rutinasFiltradas,null);
         muestraRutinas.setDialogMuestrasListener(this);
         muestraRutinas.show(transaction,null);
-        muestraRutinas.setCancelable(false);
+
     }
 
     @Override
     public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
 
         rutinaCambio=rutinaSeleccionada;
+        Rutina_User insercionRutina = new Rutina_User();
+        insercionRutina.setId_rutina(rutinaSeleccionada.getId_rutina());
+        insercionRutina.setDias(diasSemana);
         //Llamo al metodo para realizar el cambio.
 
     }

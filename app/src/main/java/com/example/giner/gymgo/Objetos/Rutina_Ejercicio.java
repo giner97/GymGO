@@ -3,7 +3,7 @@ package com.example.giner.gymgo.Objetos;
 public class Rutina_Ejercicio {
 	
 	private int id_rutina;
-	private int ejercicio;
+	private int id_ejercicio;
 	private int dia_semana;
 	private int posicion_rutina;
 	private int series;
@@ -14,11 +14,11 @@ public class Rutina_Ejercicio {
 	public void setId_rutina(int id_rutina) {
 		this.id_rutina = id_rutina;
 	}
-	public int getEjercicio() {
-		return ejercicio;
+	public int getId_ejercicio() {
+		return id_ejercicio;
 	}
-	public void setEjercicio(int ejercicio) {
-		this.ejercicio = ejercicio;
+	public void setId_ejercicio(int id_ejercicio) {
+		this.id_ejercicio = id_ejercicio;
 	}
 	public int getDia_semana() {
 		return dia_semana;
