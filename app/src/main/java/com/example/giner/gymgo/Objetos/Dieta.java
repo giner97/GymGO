@@ -9,7 +9,7 @@ public class Dieta {
 	private int calorias_totales;
 	private String descripcion;
 	private int objetivo;
-	private ArrayList<Dieta_Plato>platos;
+	private ArrayList<Dieta_Plato> plato;
 	
 	public int getId_dieta() {
 		return id_dieta;
@@ -36,11 +36,16 @@ public class Dieta {
 		this.objetivo = objetivo;
 	}
 
-	public ArrayList<Dieta_Plato> getPlatos() {
-		return platos;
+	public ArrayList<Dieta_Plato> getPlato() {
+		return plato;
 	}
 
-	public void setPlatos(ArrayList<Dieta_Plato> platos) {
-		this.platos = platos;
+	public void setPlato(ArrayList<Dieta_Plato> plato) {
+		this.plato = plato;
 	}
+
+	public String toString(){
+		return "Dieta "+this.id_dieta;
+	}
+
 }

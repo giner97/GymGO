@@ -126,6 +126,8 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     public AlertDialog seleccionDias(final int numDias){
 
+        diasSemana.clear();
+
         //Dialogo para la seleccion de los dias
             final AlertDialog.Builder builder = new AlertDialog.Builder(RutinasActivity.this);
 

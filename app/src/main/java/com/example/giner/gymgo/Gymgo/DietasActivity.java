@@ -1,14 +1,16 @@
 package com.example.giner.gymgo.Gymgo;
 
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Objetivo;
+import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,15 +23,20 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
-public class DietasActivity extends AppCompatActivity implements DialogInterface.OnClickListener, View.OnClickListener{
+public class DietasActivity extends AppCompatActivity implements DialogInterface.OnClickListener, View.OnClickListener, MuestraListView_Dialog.DialogMuestrasListener, MuestraDatos_Dialog.OnListener{
 
 
     private Button cambiarDieta;
 
+    private FragmentTransaction transaction;
     private int objetivoSeleccionado;
     private int objetivoSelecc;
     private CharSequence[] objetivos;
     private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
+    private MuestraListView_Dialog muestraDietas;
+    private ArrayList<Dieta> dietasArray = new ArrayList<>();
+    private ArrayList<Dieta> dietasFiltradas = new ArrayList<>();
+    private MuestraDatos_Dialog dialogoMuestraDietas;
 
     int numRecuperados;
 
@@ -94,7 +101,6 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
         cambiarDieta.setOnClickListener(this);
 
 
-
     }
 
 
@@ -115,9 +121,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
             public void onClick(DialogInterface dialogInterface, int which) {
                 objetivoSeleccionado = objetivoSelecc+1;
 
-                /*Borrar el toasty y añadir el constructor del metodo para seleccionar la rutina
-
-                 */
+                muestraDialogoDietas();
                 Toasty.success(DietasActivity.this,Integer.toString(objetivoSeleccionado), Toast.LENGTH_SHORT).show();
 
             }
@@ -149,6 +153,77 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+
+    }
+
+    public void muestraDialogoDietas(){
+
+        DatabaseReference dbDieta = FirebaseDatabase.getInstance().getReference().child("Dieta");
+
+        ValueEventListener eventListenerRutinas;
+
+        eventListenerRutinas = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                int numDieta;
+
+                GenericTypeIndicator<ArrayList<Dieta>> t = new GenericTypeIndicator<ArrayList<Dieta>>() {};
+
+                dietasArray= dataSnapshot.getValue(t);
+
+                //Filtramos los resultados
+
+                dietasFiltradas.clear();
+
+                for(int i=0;i<dietasArray.size();i++){
+                    if(dietasArray.get(i).getObjetivo()==objetivoSeleccionado){
+                        dietasFiltradas.add(dietasArray.get(i));
+                    }
+                }
+
+                llamaDialogo();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toasty.error(DietasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
+
+            }
+        };
+
+        dbDieta.addValueEventListener(eventListenerRutinas);
+
+    }
+
+    public void llamaDialogo(){
+        //Llamo al dialogo
+        transaction = getFragmentManager().beginTransaction();
+        muestraDietas=new MuestraListView_Dialog(null,dietasFiltradas);
+        muestraDietas.setDialogMuestrasListener(this);
+        muestraDietas.show(transaction,null);
+
+    }
+
+    @Override
+    public void onMuestraDieta(Dieta dieta) {
+
+        transaction = getFragmentManager().beginTransaction();
+        dialogoMuestraDietas= new MuestraDatos_Dialog(null,dieta);
+        dialogoMuestraDietas.setListener(this);
+        dialogoMuestraDietas.show(transaction,null);
+        dialogoMuestraDietas.setCancelable(false);
+    }
+
+    @Override
+    public void onMuestraRutina(Rutina rutina) {
+
+    }
+
+    @Override
+    public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
 
     }
 }

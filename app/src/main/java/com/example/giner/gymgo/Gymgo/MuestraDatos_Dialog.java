@@ -98,15 +98,15 @@ public class MuestraDatos_Dialog extends DialogFragment{
                 dia.setText("Dia " + (j + 1));
 
                 TextView dato1 = (TextView) relativeLayout.findViewById(R.id.dato1);
-                dia.setText(dieta.getPlatos().get(1 + multiplicador).getPlato());
+                dia.setText(dieta.getPlato().get(1 + multiplicador).getId_plato());
                 TextView dato2 = (TextView) relativeLayout.findViewById(R.id.dato2);
-                dia.setText(dieta.getPlatos().get(2 + multiplicador).getPlato());
+                dia.setText(dieta.getPlato().get(2 + multiplicador).getId_plato());
                 TextView dato3 = (TextView) relativeLayout.findViewById(R.id.dato3);
-                dia.setText(dieta.getPlatos().get(3 + multiplicador).getPlato());
+                dia.setText(dieta.getPlato().get(3 + multiplicador).getId_plato());
                 TextView dato4 = (TextView) relativeLayout.findViewById(R.id.dato4);
-                dia.setText(dieta.getPlatos().get(4 + multiplicador).getPlato());
+                dia.setText(dieta.getPlato().get(4 + multiplicador).getId_plato());
                 TextView dato5 = (TextView) relativeLayout.findViewById(R.id.dato5);
-                dia.setText(dieta.getPlatos().get(5 + multiplicador).getPlato());
+                dia.setText(dieta.getPlato().get(5 + multiplicador).getId_plato());
                 multiplicador = multiplicador + 5;
 
                 layout.addView(relativeLayout);

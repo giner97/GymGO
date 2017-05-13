@@ -4,7 +4,7 @@ public class Dieta_Plato {
 
 	private int dia_semana;
 	private int tipo_comida;
-	private int plato;
+	private int id_plato;
 
 	public int getDia_semana() {
 		return dia_semana;
@@ -18,11 +18,11 @@ public class Dieta_Plato {
 	public void setTipo_comida(int tipo_comida) {
 		this.tipo_comida = tipo_comida;
 	}
-	public int getPlato() {
-		return plato;
+	public int getId_plato() {
+		return id_plato;
 	}
-	public void setPlato(int plato) {
-		this.plato = plato;
+	public void setId_plato(int id_plato) {
+		this.id_plato = id_plato;
 	}
 
 }
