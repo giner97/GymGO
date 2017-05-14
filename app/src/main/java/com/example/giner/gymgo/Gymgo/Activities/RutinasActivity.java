@@ -15,6 +15,7 @@ import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.numDias_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
+import com.example.giner.gymgo.Objetos.Ejercicio;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.Objetos.Rutina_User;
@@ -57,11 +58,17 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private Rutina rutinaCambio;
         private MuestraDatos_Dialog dialogoMuestraRutina;
         private ArrayList diasSemana = new ArrayList();
+        private boolean userSinRutina;
+        private int numObjetivoUser;
+        private ArrayList<String>ejerciciosRutina;
+        private ArrayList<Ejercicio>ejercicios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutinas);
+
+        userSinRutina=false;
 
         //Recupero el uid del usuario loggeado
 
@@ -112,6 +119,38 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         dbObjetivos.addValueEventListener(eventListener);
 
+        //Recupero la rutina de la bd
+
+        DatabaseReference dbRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        ValueEventListener eventListener2;
+
+        eventListener2 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                numObjetivoUser=Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
+
+                if(dataSnapshot.child("rutina").getValue()==null){
+                    userSinRutina=true;
+                    muestraDialogNumDias();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
+
+            }
+
+        };
+
+        dbRutina.addValueEventListener(eventListener2);
+
         //Intancio los widgets
 
             cambiarRutina = (Button)findViewById(R.id.cambiarRutina);
@@ -127,7 +166,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     public void muestraDialogNumDias(){
         transaction = getFragmentManager().beginTransaction();
-        dialogoNumDias = new numDias_Dialog();
+        dialogoNumDias = new numDias_Dialog(userSinRutina);
         dialogoNumDias.show(transaction,null);
         dialogoNumDias.setCancelable(false);
         dialogoNumDias.setNumDialogListener(this);
@@ -166,14 +205,29 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(diasSemana.size()>numDias){
+                    if(userSinRutina==true){
+                        finish();
+                    }
                     Toasty.error(RutinasActivity.this,"Has introducido mas dias de los que vas a ir al gimnasio", Toast.LENGTH_SHORT).show();
                 }
                 else if(diasSemana.size()<numDias){
+                    if(userSinRutina==true){
+                        finish();
+                    }
                     Toasty.error(RutinasActivity.this,"Has introducido menos dias de los que vas a ir al gimnasio", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    //Llama al dialogo que pide el objetivo
-                    muestraDialogObjetivo();
+
+                    if(numObjetivoUser>0){
+                        objetivoSeleccionado=numObjetivoUser;
+                        muestraDialgoRutinas();
+                    }
+
+                    else{
+                        //Llama al dialogo que pide el objetivo
+                            muestraDialogObjetivo();
+                    }
+
                 }
             }
         });
@@ -181,7 +235,12 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+                if(userSinRutina==true){
+                    finish();
+                }
+                else{
+                    dialogInterface.dismiss();
+                }
             }
         });
 
@@ -212,7 +271,12 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+                if(userSinRutina==true){
+                    finish();
+                }
+                else{
+                    dialogInterface.dismiss();
+                }
             }
         });
 
@@ -243,11 +307,14 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         seleccionDias(numDias).show();
     }
 
+    @Override
+    public void finalizaActivity() {
+        finish();
+    }
+
     //Hay que pasarle los parametros y usarlos como filtros en la busqueda de rutinas
 
     public void muestraDialgoRutinas(){
-
-        //Falta filtrar las rutinas
 
         //Recupero las rutinas de la bd
 
@@ -303,10 +370,8 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onMuestraRutina(Rutina rutina) {
         transaction = getFragmentManager().beginTransaction();
-        dialogoMuestraRutina = new MuestraDatos_Dialog(rutina,null);
-        dialogoMuestraRutina.setListener(this);
-        dialogoMuestraRutina.show(transaction,null);
-        dialogoMuestraRutina.setCancelable(false);
+        this.rutinaCambio=rutina;
+        traduceEjercicios();
     }
 
     public void llamaDialogo(){
@@ -314,6 +379,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         transaction = getFragmentManager().beginTransaction();
         muestraRutinas=new MuestraListView_Dialog(rutinasFiltradas,null);
         muestraRutinas.setDialogMuestrasListener(this);
+        muestraRutinas.setCancelable(false);
         muestraRutinas.show(transaction,null);
 
     }
@@ -330,6 +396,67 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
             DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
             dbUpdateRutina.child("rutina").setValue(insercionRutina);
+            dbUpdateRutina.child("objetivo").setValue(objetivoSeleccionado);
+            userSinRutina=false;
 
     }
+
+    @Override
+    public void onCancelled() {
+        if(userSinRutina==true){
+            finish();
+        }
+    }
+
+    //Metodo para convertir los id de los ejercicios de la rutina en el nombre del ejercicio para mostrarlo en el dialogo
+
+    public void traduceEjercicios(){
+
+        DatabaseReference dbEjercicios = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        ValueEventListener eventListener;
+
+        eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                GenericTypeIndicator<ArrayList<Ejercicio>> t = new GenericTypeIndicator<ArrayList<Ejercicio>>() {};
+
+                ejercicios = dataSnapshot.getValue(t);
+                ejerciciosRutina=new ArrayList<>();
+                for(int i=0;i<rutinaCambio.getEjercicios().size();i++){
+
+                    for(int j=1;j<ejercicios.size();j++){
+
+                        if(rutinaCambio.getEjercicios().get(i).getId_ejercicio()==ejercicios.get(j).getId_ejercicio()){
+                            ejerciciosRutina.add(ejercicios.get(j).getNombreEjercicio().toString());
+                        }
+
+                    }
+
+                }
+
+                dialogoMuestraRutina = new MuestraDatos_Dialog(ejerciciosRutina,rutinaCambio,null,null);
+                dialogoMuestraRutina.setListener(RutinasActivity.this);
+                dialogoMuestraRutina.show(transaction,null);
+                dialogoMuestraRutina.setCancelable(false);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
+
+            }
+
+        };
+
+        dbEjercicios.addValueEventListener(eventListener);
+
+    }
+
+
 }

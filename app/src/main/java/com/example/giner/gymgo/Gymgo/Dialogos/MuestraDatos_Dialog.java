@@ -17,12 +17,16 @@ import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.R;
 
+import java.util.ArrayList;
+
 import es.dmoral.toasty.Toasty;
 
 public class MuestraDatos_Dialog extends DialogFragment{
 
     //Variables
 
+        private ArrayList<String>ejerciciosRutina;
+        private ArrayList<String>platosDieta;
         private Rutina rutina;
         private Dieta dieta;
         private String tipoDato=null;
@@ -35,15 +39,15 @@ public class MuestraDatos_Dialog extends DialogFragment{
 
     }
 
-    public MuestraDatos_Dialog(Rutina rutina,Dieta dieta){
+    public MuestraDatos_Dialog(ArrayList<String>ejerciciosRutina,Rutina rutina, ArrayList<String>platosDieta, Dieta dieta){
 
-        if (rutina != null) {
-            this.rutina=new Rutina();
+        if (ejerciciosRutina != null) {
+            this.ejerciciosRutina=ejerciciosRutina;
             this.rutina=rutina;
             tipoDato="rutina";
         }
-        else if(dieta!=null){
-            this.dieta=dieta;
+        else if(platosDieta!=null){
+            this.platosDieta=platosDieta;
             this.dieta=dieta;
             tipoDato="dieta";
         }
@@ -72,15 +76,15 @@ public class MuestraDatos_Dialog extends DialogFragment{
                 dia.setText("Dia "+(j+1));
 
                 TextView dato1 = (TextView) relativeLayout.findViewById(R.id.dato1);
-                dato1.setText(Integer.toString(rutina.getEjercicios().get(0+multiplicador).getId_ejercicio()));
+                dato1.setText(ejerciciosRutina.get(0+multiplicador));
                 TextView dato2 = (TextView) relativeLayout.findViewById(R.id.dato2);
-                dato2.setText(Integer.toString(rutina.getEjercicios().get(1+multiplicador).getId_ejercicio()));
+                dato2.setText(ejerciciosRutina.get(1+multiplicador));
                 TextView dato3 = (TextView) relativeLayout.findViewById(R.id.dato3);
-                dato3.setText(Integer.toString(rutina.getEjercicios().get(2+multiplicador).getId_ejercicio()));
+                dato3.setText(ejerciciosRutina.get(2+multiplicador));
                 TextView dato4 = (TextView) relativeLayout.findViewById(R.id.dato4);
-                dato4.setText(Integer.toString(rutina.getEjercicios().get(3+multiplicador).getId_ejercicio()));
+                dato4.setText(ejerciciosRutina.get(3+multiplicador));
                 TextView dato5 = (TextView) relativeLayout.findViewById(R.id.dato5);
-                dato5.setText(Integer.toString(rutina.getEjercicios().get(4+multiplicador).getId_ejercicio()));
+                dato5.setText(ejerciciosRutina.get(4+multiplicador));
                 multiplicador = multiplicador + 5;
 
                 layout.addView(relativeLayout);
@@ -98,15 +102,15 @@ public class MuestraDatos_Dialog extends DialogFragment{
                 dia.setText("Dia " + (j + 1));
 
                 TextView dato1 = (TextView) relativeLayout.findViewById(R.id.dato1);
-                dia.setText(dieta.getPlato().get(1 + multiplicador).getId_plato());
+                dato1.setText(platosDieta.get(0+multiplicador));
                 TextView dato2 = (TextView) relativeLayout.findViewById(R.id.dato2);
-                dia.setText(dieta.getPlato().get(2 + multiplicador).getId_plato());
+                dato2.setText(platosDieta.get(1+multiplicador));
                 TextView dato3 = (TextView) relativeLayout.findViewById(R.id.dato3);
-                dia.setText(dieta.getPlato().get(3 + multiplicador).getId_plato());
+                dato3.setText(platosDieta.get(2+multiplicador));
                 TextView dato4 = (TextView) relativeLayout.findViewById(R.id.dato4);
-                dia.setText(dieta.getPlato().get(4 + multiplicador).getId_plato());
+                dato4.setText(platosDieta.get(3+multiplicador));
                 TextView dato5 = (TextView) relativeLayout.findViewById(R.id.dato5);
-                dia.setText(dieta.getPlato().get(5 + multiplicador).getId_plato());
+                dato5.setText(platosDieta.get(4+multiplicador));
                 multiplicador = multiplicador + 5;
 
                 layout.addView(relativeLayout);
@@ -129,6 +133,7 @@ public class MuestraDatos_Dialog extends DialogFragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toasty.info(getActivity(),"Se ha cancelado el cambio de rutina", Toast.LENGTH_SHORT).show();
+                escuchador.onCancelled();
                 dismiss();
             }
         });
@@ -149,6 +154,7 @@ public class MuestraDatos_Dialog extends DialogFragment{
     //Construyo una interface que defina la callback onLogin()
     public interface OnListener{
         void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada);
+        void onCancelled();
     }
 
 }

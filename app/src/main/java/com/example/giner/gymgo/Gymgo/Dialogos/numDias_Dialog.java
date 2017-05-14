@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Gymgo.Activities.RutinasActivity;
 import com.example.giner.gymgo.R;
 
 import es.dmoral.toasty.Toasty;
@@ -23,10 +24,17 @@ public class numDias_Dialog extends DialogFragment {
     //Variable para almacenar el numero de dias
 
         private int numDias;
+        private boolean userSinRutina;
 
     //Escuchador del dialogo
 
         private OnNumDialog escuchador;
+
+    //Constructor
+
+        public numDias_Dialog(boolean userSinRutina){
+            this.userSinRutina=userSinRutina;
+        }
 
     //OnCreateDialog
 
@@ -59,12 +67,18 @@ public class numDias_Dialog extends DialogFragment {
                     if (numDias <=7 && numDias > 0) {
                         escuchador.pasaNum(numDias);
                     } else {
+                        if(userSinRutina==true){
+                            escuchador.finalizaActivity();
+                        }
                         Toasty.error(getActivity(), "El numero introducido es incorrecto", Toast.LENGTH_SHORT).show();
                     }
 
                 }
 
                 else{
+                    if(userSinRutina==true){
+                        escuchador.finalizaActivity();
+                    }
                     Toasty.error(getActivity(), "Te has dejado el campo vacio", Toast.LENGTH_SHORT).show();
                 }
 
@@ -74,7 +88,15 @@ public class numDias_Dialog extends DialogFragment {
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+
+                if(userSinRutina==true){
+                    escuchador.finalizaActivity();
+                }
+
+                else{
+                    dialogInterface.dismiss();
+                }
+
             }
         });
 
@@ -92,6 +114,7 @@ public class numDias_Dialog extends DialogFragment {
 
         public interface OnNumDialog{
             void pasaNum(int numDias);
+            void finalizaActivity();
         }
 
         public void setNumDialogListener(OnNumDialog escuchador){

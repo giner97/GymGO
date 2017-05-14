@@ -83,13 +83,14 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
                         altura = Double.parseDouble(dataSnapshot.child("altura").getValue().toString());
                         peso = Double.parseDouble(dataSnapshot.child("peso").getValue().toString());
                         apellidos = dataSnapshot.child("apellidos").getValue().toString();
-                        objetivoSeleccionado = Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
 
                         cargaDatos();
 
                     }
 
                 }
+
+                objetivoSeleccionado = Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
 
             }
 

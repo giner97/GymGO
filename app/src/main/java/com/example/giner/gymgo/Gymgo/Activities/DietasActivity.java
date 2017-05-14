@@ -39,6 +39,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     private ArrayList<Dieta> dietasArray = new ArrayList<>();
     private ArrayList<Dieta> dietasFiltradas = new ArrayList<>();
     private MuestraDatos_Dialog dialogoMuestraDietas;
+    private ArrayList<String>platosDieta;
 
     int numRecuperados;
 
@@ -213,7 +214,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     public void onMuestraDieta(Dieta dieta) {
 
         transaction = getFragmentManager().beginTransaction();
-        dialogoMuestraDietas= new MuestraDatos_Dialog(null,dieta);
+        dialogoMuestraDietas= new MuestraDatos_Dialog(null,null,platosDieta,dieta);
         dialogoMuestraDietas.setListener(this);
         dialogoMuestraDietas.show(transaction,null);
         dialogoMuestraDietas.setCancelable(false);
@@ -226,6 +227,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
     @Override
     public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
+
+    }
+
+    @Override
+    public void onCancelled() {
 
     }
 }
