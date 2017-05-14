@@ -39,7 +39,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp">
+                    android:layout_margin="15dp">
 
                     <TextView
                         android:id="@+id/textView"
@@ -60,7 +60,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp">
+                    android:layout_margin="15dp">
 
                     <TextView
                         android:id="@+id/textView2"
@@ -81,7 +81,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp">
+                    android:layout_margin="15dp">
 
                     <TextView
                         android:id="@+id/textView3"
@@ -97,12 +97,13 @@
                         android:ems="10"
                         android:hint="Introduce el peso"
                         android:inputType="numberDecimal"/>
+
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="20dp">
+                    android:layout_margin="15dp">
 
                     <TextView
                         android:id="@+id/textView4"
@@ -120,6 +121,27 @@
                         android:inputType="numberDecimal" />
 
                 </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Objetivo: "
+                        android:textSize="20dp" />
+
+                    <Button
+                        android:id="@+id/buttonObjetivo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Seleccionar Objetivo"
+                        android:theme="@style/botonLogin"/>
+                </TableRow>
+
             </TableLayout>
 
             <LinearLayout

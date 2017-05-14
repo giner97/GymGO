@@ -189,8 +189,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    /*Borrar el toasty y añadir el constructor del metodo para seleccionar la rutina*/
-
     public void muestraDialogObjetivo(){
 
        ///Creo el dialogo
