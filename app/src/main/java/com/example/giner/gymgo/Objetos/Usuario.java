@@ -7,17 +7,17 @@ public class Usuario {
 	private String apellidos;
 	private String email;
 	private double peso;
-	private int altura;
+	private double altura;
 	private int objetivo;
 	private Revision_user revision;
 	private Rutina_User rutina;
-	private int dieta;
+	private Dieta dieta;
 
 	public Usuario() {
 
 	}
 
-	public Usuario(String uid, String nombre, String apellidos, String email, double peso, int altura, int objetivo, Revision_user revision, Rutina_User rutina, int dieta) {
+	public Usuario(String uid, String nombre, String apellidos, String email, double peso, int altura, int objetivo, Revision_user revision, Rutina_User rutina, Dieta dieta) {
 		this.uid = uid;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -60,10 +60,10 @@ public class Usuario {
 	public void setPeso(double peso) {
 		this.peso = peso;
 	}
-	public int getAltura() {
+	public double getAltura() {
 		return altura;
 	}
-	public void setAltura(int altura) {
+	public void setAltura(double altura) {
 		this.altura = altura;
 	}
 	public int getObjetivo() {
@@ -84,10 +84,10 @@ public class Usuario {
 	public void setRutina(Rutina_User rutina) {
 		this.rutina = rutina;
 	}
-	public int getDieta() {
+	public Dieta getDieta() {
 		return dieta;
 	}
-	public void setDieta(int dienta) {
+	public void setDieta(Dieta dienta) {
 		this.dieta = dienta;
 	}
 	

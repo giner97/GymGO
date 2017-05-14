@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.FragmentTransaction;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.AutentificarDialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.CambiarContrasenyaDialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.CambiarEmailDialog;
 import com.example.giner.gymgo.Objetos.Usuario;
 import com.example.giner.gymgo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -204,7 +207,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.datos) {
-
+            Intent intencion;
+            intencion = new Intent(this, ModificarDatosUsuarioActivity.class);
+            startActivity(intencion);
         }
         else if (id == R.id.cambiarCorreo) {
             creaDialogoReAutentificacion(claveCambiarEmail);
@@ -352,7 +357,7 @@ public class MainActivity extends AppCompatActivity
 
         if(v.getId()==botonRutina.getId()){
             intencion = new Intent(this, RutinasActivity.class);
-            intencion.putExtra(KEY_UID, userDatabase.getUid());
+            intencion.putExtra(KEY_UID, userLogueado.getUid());
             startActivity(intencion);
         }
 

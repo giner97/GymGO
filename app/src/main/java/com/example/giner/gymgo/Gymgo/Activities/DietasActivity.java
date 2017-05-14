@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Activities;
 
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;

@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Activities;
 
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.numDias_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;
@@ -21,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;

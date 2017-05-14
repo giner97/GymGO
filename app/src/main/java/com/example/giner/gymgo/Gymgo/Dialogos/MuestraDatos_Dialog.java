@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Dialogos;
 
 
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

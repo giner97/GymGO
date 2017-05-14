@@ -1,4 +1,4 @@
-package com.example.giner.gymgo.Gymgo;
+package com.example.giner.gymgo.Gymgo.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
