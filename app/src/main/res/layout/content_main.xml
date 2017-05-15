@@ -9,35 +9,54 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        android:orientation="vertical"
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <Button
-            android:id="@+id/buttonRutinas"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver rutinas" />
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/buttonDietas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver dietas" />
+            <ImageButton
+                android:id="@+id/buttonRutinas"
+                android:layout_margin="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/rutinas"
+                android:background="@android:color/transparent"/>
 
-        <Button
-            android:id="@+id/buttonRevision"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver revisiones" />
+            <ImageButton
+                android:id="@+id/buttonDietas"
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/dietas"
+                android:background="@android:color/transparent"/>
+        </TableRow>
 
-        <Button
-            android:id="@+id/buttonPGC"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Calcular Porcentaje de Grasa Corporal" />
-    </LinearLayout>
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/buttonRevision"
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/revisiones"
+                android:background="@android:color/transparent"/>
+
+            <ImageButton
+                android:id="@+id/buttonPGC"
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/pgc"
+                android:background="@android:color/transparent"/>
+        </TableRow>
+
+    </TableLayout>
+
 </android.support.constraint.ConstraintLayout>

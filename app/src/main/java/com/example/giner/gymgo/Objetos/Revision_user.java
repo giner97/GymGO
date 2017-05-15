@@ -38,8 +38,5 @@ public class Revision_user {
 	public void setFecha_revision(String fecha_revision) {
 		this.fecha_revision = fecha_revision;
 	}
-	
-	
-	
 
 }

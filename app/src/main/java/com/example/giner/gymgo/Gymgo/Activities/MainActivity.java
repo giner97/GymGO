@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.FragmentTransaction;
@@ -75,10 +76,10 @@ public class MainActivity extends AppCompatActivity
 
     //Creo los widgets
 
-        private Button botonRutina;
-        private Button botonDieta;
-        private Button botonRevision;
-        private Button botonPGC;
+        private ImageButton botonRutina;
+        private ImageButton botonDieta;
+        private ImageButton botonRevision;
+        private ImageButton botonPGC;
 
     //Objetos
 
@@ -116,11 +117,7 @@ public class MainActivity extends AppCompatActivity
 
                 //Si el usuario no existe en la bd (Se acaba de registrar), creo un nuevo usuario con su uid
 
-                if(dataSnapshot.exists()){
-                    userDatabase = dataSnapshot.getValue(Usuario.class);
-                }
-
-                else{
+                if(!dataSnapshot.exists()){
 
                     DatabaseReference dbCreateUser = FirebaseDatabase.getInstance().getReference().child("User");
                     Map<String, Usuario>crearUsuario = new HashMap<>();
@@ -157,10 +154,10 @@ public class MainActivity extends AppCompatActivity
 
         //Instancio los botones
 
-            botonRutina = (Button)findViewById(R.id.buttonRutinas);
-            botonDieta = (Button)findViewById(R.id.buttonDietas);
-            botonRevision = (Button)findViewById(R.id.buttonRevision);
-            botonPGC = (Button)findViewById(R.id.buttonPGC);
+            botonRutina = (ImageButton) findViewById(R.id.buttonRutinas);
+            botonDieta = (ImageButton)findViewById(R.id.buttonDietas);
+            botonRevision = (ImageButton)findViewById(R.id.buttonRevision);
+            botonPGC = (ImageButton)findViewById(R.id.buttonPGC);
 
         //Escuchadores de los botones
 
@@ -363,13 +360,13 @@ public class MainActivity extends AppCompatActivity
 
         else if(v.getId()==botonDieta.getId()){
             intencion = new Intent(this, DietasActivity.class);
-            intencion.putExtra(KEY_UID, userDatabase.getUid());
+            intencion.putExtra(KEY_UID, userLogueado.getUid());
             startActivity(intencion);
         }
 
         else if(v.getId()==botonRevision.getId()){
             intencion = new Intent(this, RevisionesActivity.class);
-            intencion.putExtra(KEY_UID, userDatabase.getUid());
+            intencion.putExtra(KEY_UID, userLogueado.getUid());
             startActivity(intencion);
         }
 

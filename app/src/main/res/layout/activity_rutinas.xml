@@ -10,10 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center"
+        android:foregroundGravity="center"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        <CalendarView
             android:id="@+id/calendarView"
             android:layout_width="368dp"
             android:layout_height="wrap_content"
@@ -29,13 +31,6 @@
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:text="Cambiar Rutina"
-            android:theme="@style/botonLogin" />
-        <Button
-            android:id="@+id/crearRutina"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:text="Crear Rutina"
             android:theme="@style/botonLogin" />
     </LinearLayout>
 

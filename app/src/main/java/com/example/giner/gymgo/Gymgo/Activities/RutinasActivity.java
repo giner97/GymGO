@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
@@ -18,6 +20,7 @@ import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Ejercicio;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Rutina;
+import com.example.giner.gymgo.Objetos.Rutina_Ejercicio;
 import com.example.giner.gymgo.Objetos.Rutina_User;
 import com.example.giner.gymgo.R;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import es.dmoral.toasty.Toasty;
 
@@ -36,7 +42,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
     //Widgets
 
         private Button cambiarRutina;
-        private Button crearRutina;
 
     //Variables
 
@@ -62,6 +67,10 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private int numObjetivoUser;
         private ArrayList<String>ejerciciosRutina;
         private ArrayList<Ejercicio>ejercicios;
+        private CalendarView calendario;
+        private Rutina_User rutinaUsuario;
+        private Rutina rutinaRecuperada;
+        private int diaRutina;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,11 +141,25 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 numObjetivoUser=Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
+                rutinaUsuario=dataSnapshot.child("rutina").getValue(Rutina_User.class);
 
                 if(dataSnapshot.child("rutina").getValue()==null){
                     userSinRutina=true;
                     muestraDialogNumDias();
                 }
+
+                //Instancio el calendario e importo los metodos
+
+                calendario = (CalendarView)findViewById(R.id.calendarView);
+                calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                    @Override
+                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+
+                        int diaSemana = recuperaIdDia(dayOfMonth,month,year);
+                        muestraDiaRutina(diaSemana);
+
+                    }
+                });
 
             }
 
@@ -154,13 +177,10 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         //Intancio los widgets
 
             cambiarRutina = (Button)findViewById(R.id.cambiarRutina);
-            crearRutina = (Button)findViewById(R.id.crearRutina);
 
         //Escuchadores
 
             cambiarRutina.setOnClickListener(this);
-            crearRutina.setOnClickListener(this);
-
 
     }
 
@@ -294,9 +314,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view.getId()==cambiarRutina.getId()){
             muestraDialogNumDias();
-        }
-        else if(view.getId()==crearRutina.getId()){
-
         }
 
     }
@@ -458,5 +475,107 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    public int recuperaIdDia(int dia,int mes,int anyo){
+
+        int idDia=0;
+
+        //Parseamos la fecha a nombre del dia
+
+        String fecha=dia+1+"/"+mes+"/"+anyo;
+        SimpleDateFormat formato1 = new SimpleDateFormat("dd/mm/yyyy");
+        Date fechaDate = new Date();
+        try {
+            fechaDate = formato1.parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat formato2 = new SimpleDateFormat("EEEE");
+        String diaNombre = formato2.format(fechaDate);
+
+        //Convertimos el nombre del dia en el id
+
+        if(diaNombre.equals("Monday")){
+            idDia=0;
+        }
+        else if(diaNombre.equals("Tuesday")){
+            idDia=1;
+        }
+        else if(diaNombre.equals("Wednesday")){
+            idDia=2;
+        }
+        else if(diaNombre.equals("Thursday")){
+            idDia=3;
+        }
+        else if(diaNombre.equals("Friday")){
+            idDia=4;
+        }
+        else if(diaNombre.equals("Saturday")){
+            idDia=5;
+        }
+        else if(diaNombre.equals("Sunday")){
+            idDia=6;
+        }
+
+        return idDia;
+
+    }
+
+    //Metodo que llama al dialogo que toca para mostrar las rutinas
+
+        public void muestraDiaRutina(int id_dia){
+
+            boolean vacio=true;
+            ArrayList<Integer>dias = new ArrayList<>();
+            final ArrayList<Rutina_Ejercicio>rutinaEjercicios = new ArrayList<>();
+            dias = rutinaUsuario.getDias();
+            diaRutina=1;
+
+            for(int i=0;i<dias.size();i++){
+
+                if(id_dia==dias.get(i)){
+
+                    //Recupero la rutina del usuario de la bd
+
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+                    //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+                        ValueEventListener eventListener;
+
+                    eventListener= new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            rutinaEjercicios.clear();
+
+                            rutinaRecuperada = dataSnapshot.child("rutina").child(Integer.toString(rutinaUsuario.getId_rutina())).getValue(Rutina.class);
+                            for(int i=0;i<rutinaRecuperada.getEjercicios().size();i++){
+                                if(rutinaRecuperada.getEjercicios().get(i).getDia_semana()==diaRutina){
+                                    rutinaEjercicios.add(rutinaRecuperada.getEjercicios().get(i));
+                                    Toasty.info(RutinasActivity.this,Integer.toString(rutinaEjercicios.get(i).getId_ejercicio()),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    };
+
+                    db.addValueEventListener(eventListener);
+
+                    vacio=false;
+
+                }
+
+            }
+
+            if(vacio==true){
+                Toasty.info(RutinasActivity.this,"Este dia no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
+            }
+
+        }
 
 }
