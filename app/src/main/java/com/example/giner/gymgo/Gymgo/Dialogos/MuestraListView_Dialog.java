@@ -51,7 +51,7 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
             }
             else if(rutinas==null) {
                 this.dietas = dietas;
-                tipoArray = "dietas";
+                tipoArray = "dieta";
             }
         }
 
@@ -95,10 +95,6 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
 
                     listaDeMuestras.setAdapter(arrayAdapterDietas);
 
-                }
-
-                else{
-                    Toasty.info(getActivity(),"Entra aqui", Toast.LENGTH_SHORT).show();
                 }
 
             }

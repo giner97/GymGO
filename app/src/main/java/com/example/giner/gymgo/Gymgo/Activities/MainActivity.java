@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else{
                     Log.d(TAG, "No se ha podido cambiar la contraseña");
-                    Toasty.error(MainActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                   Toasty.error(MainActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

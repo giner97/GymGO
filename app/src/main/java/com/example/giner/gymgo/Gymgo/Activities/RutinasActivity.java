@@ -71,6 +71,8 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private Rutina_User rutinaUsuario;
         private Rutina rutinaRecuperada;
         private int diaRutina;
+        private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
+        private ArrayList<Ejercicio> listaEjerciciosFiltrada = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +175,32 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         dbRutina.addValueEventListener(eventListener2);
+
+        //Recupero la rutina del usuario de la bd
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        ValueEventListener eventListener3;
+
+        eventListener3= new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(rutinaUsuario!=null) {
+                    rutinaRecuperada = dataSnapshot.child("rutina").child(Integer.toString(rutinaUsuario.getId_rutina())).getValue(Rutina.class);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        db.addValueEventListener(eventListener3);
 
         //Intancio los widgets
 
@@ -529,45 +557,40 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             final ArrayList<Rutina_Ejercicio>rutinaEjercicios = new ArrayList<>();
             dias = rutinaUsuario.getDias();
             diaRutina=1;
+            rutinaEjercicios.clear();
+            ArrayList<Ejercicio>ejerciciosDia = new ArrayList<>();
 
             for(int i=0;i<dias.size();i++){
 
                 if(id_dia==dias.get(i)){
 
-                    //Recupero la rutina del usuario de la bd
 
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-
-                    //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-                        ValueEventListener eventListener;
-
-                    eventListener= new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            rutinaEjercicios.clear();
-
-                            rutinaRecuperada = dataSnapshot.child("rutina").child(Integer.toString(rutinaUsuario.getId_rutina())).getValue(Rutina.class);
-                            for(int i=0;i<rutinaRecuperada.getEjercicios().size();i++){
-                                if(rutinaRecuperada.getEjercicios().get(i).getDia_semana()==diaRutina){
-                                    rutinaEjercicios.add(rutinaRecuperada.getEjercicios().get(i));
-                                    Toasty.info(RutinasActivity.this,Integer.toString(rutinaEjercicios.get(i).getId_ejercicio()),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
+                    for(int j=0;j<rutinaRecuperada.getEjercicios().size();j++){
+                        if(rutinaRecuperada.getEjercicios().get(j).getDia_semana()==diaRutina){
+                            rutinaEjercicios.add(rutinaRecuperada.getEjercicios().get(j));
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    //Recupero y filtro los ejercicios
 
-                        }
-                    };
+                        ejerciciosDia=recuperaEjercicios(rutinaEjercicios);
 
-                    db.addValueEventListener(eventListener);
+                    //Llamo al dialogo y le paso los ejercicios filtrados
+
+                    //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get() y el ejercicio seleccionado
+
+                    //Bucle para mostrar los valores del array
+
+                    /*for(int q=0;q<rutinaEjercicios.size();q++) {
+                        Toasty.info(RutinasActivity.this, Integer.toString(rutinaEjercicios.get(q).getId_ejercicio()), Toast.LENGTH_SHORT).show();
+                    }*/
 
                     vacio=false;
 
+                }
+
+                else{
+                    diaRutina++;
                 }
 
             }
@@ -575,6 +598,53 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             if(vacio==true){
                 Toasty.info(RutinasActivity.this,"Este dia no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
             }
+
+        }
+
+        public ArrayList<Ejercicio>recuperaEjercicios(final ArrayList<Rutina_Ejercicio> rutina_ejercicio){
+
+            DatabaseReference dbEjercicios = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
+
+            //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+            ValueEventListener eventListener4;
+
+            listaEjerciciosFiltrada.clear();
+
+            eventListener4 = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    GenericTypeIndicator<ArrayList<Ejercicio>> t = new GenericTypeIndicator<ArrayList<Ejercicio>>() {};
+                    listaEjercicios = dataSnapshot.getValue(t);
+
+                    for(int i=0;i<rutina_ejercicio.size();i++){
+
+                        for(int j=1;j<listaEjercicios.size();j++){
+
+                            if(rutina_ejercicio.get(i).getId_ejercicio()==listaEjercicios.get(j).getId_ejercicio()){
+                                listaEjerciciosFiltrada.add(listaEjercicios.get(j));
+                            }
+
+                        }
+
+                    }
+
+                    for(int q=0;q<listaEjerciciosFiltrada.size();q++){
+                        Toasty.info(RutinasActivity.this,listaEjerciciosFiltrada.get(q).getNombreEjercicio(),Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+
+            dbEjercicios.addValueEventListener(eventListener4);
+
+            return listaEjerciciosFiltrada;
 
         }
 
