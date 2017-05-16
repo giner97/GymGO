@@ -25,11 +25,11 @@ public class MuestraDatos_Dialog extends DialogFragment{
 
     //Variables
 
-        private ArrayList<String>ejerciciosRutina;
-        private ArrayList<String>platosDieta;
-        private Rutina rutina;
-        private Dieta dieta;
-        private String tipoDato=null;
+    private ArrayList<String>ejerciciosRutina;
+    private ArrayList<String>platosDieta;
+    private Rutina rutina;
+    private Dieta dieta;
+    private String tipoDato=null;
 
     private AlertDialog dialogo;
     private OnListener escuchador;
@@ -66,7 +66,7 @@ public class MuestraDatos_Dialog extends DialogFragment{
         int multiplicador=0;
 
         if (rutina != null) {
-            
+
             for (int j = 0; j < rutina.getDias(); j++) {
 
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -102,15 +102,15 @@ public class MuestraDatos_Dialog extends DialogFragment{
                 dia.setText("Dia " + (j + 1));
 
                 TextView dato1 = (TextView) relativeLayout.findViewById(R.id.dato1);
-                dato1.setText(platosDieta.get(0+multiplicador));
+                dato1.setText("Desayuno: "+platosDieta.get(0+multiplicador));
                 TextView dato2 = (TextView) relativeLayout.findViewById(R.id.dato2);
-                dato2.setText(platosDieta.get(1+multiplicador));
+                dato2.setText("Almuerzo: "+platosDieta.get(1+multiplicador));
                 TextView dato3 = (TextView) relativeLayout.findViewById(R.id.dato3);
-                dato3.setText(platosDieta.get(2+multiplicador));
+                dato3.setText("Comida: "+platosDieta.get(2+multiplicador));
                 TextView dato4 = (TextView) relativeLayout.findViewById(R.id.dato4);
-                dato4.setText(platosDieta.get(3+multiplicador));
+                dato4.setText("Merienda: "+platosDieta.get(3+multiplicador));
                 TextView dato5 = (TextView) relativeLayout.findViewById(R.id.dato5);
-                dato5.setText(platosDieta.get(4+multiplicador));
+                dato5.setText("Cena: "+platosDieta.get(4+multiplicador));
                 multiplicador = multiplicador + 5;
 
                 layout.addView(relativeLayout);
