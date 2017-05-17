@@ -4,6 +4,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,9 +19,12 @@ import java.util.Date;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
+import com.example.giner.gymgo.Objetos.Dieta_Plato;
+import com.example.giner.gymgo.Objetos.Ejercicio;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Plato;
 import com.example.giner.gymgo.Objetos.Rutina;
+import com.example.giner.gymgo.Objetos.Rutina_Ejercicio;
 import com.example.giner.gymgo.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.ArrayList;
 
@@ -37,9 +44,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
 
     private Button cambiarDieta;
-    private CalendarView calendario;
+
     private String uidUser;
-    private int numObjetivoUser;
+    private MaterialCalendarView calendario;
+
+    private int numObjetivoUser, diaDieta;
     private ArrayList<Plato>platos;
     private FragmentTransaction transaction;
     private int objetivoSeleccionado;
@@ -55,6 +64,8 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     private Dieta dietaUsuario;
     private Dieta dietaRecuperada;
     private Boolean userSinDieta;
+    private ArrayList<Plato> listaPlato = new ArrayList<>();
+    private ArrayList<Plato> listaPlatoFiltrado = new ArrayList<>();
 
     int numRecuperados;
     private int diaDietas;
@@ -137,18 +148,18 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
                 }
 
-                //Instancio el calendario e importo los metodos
 
-               /* calendario = (CalendarView)findViewById(R.id.calendarView);
-                calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+                calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
-                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-
-                        int diaSemana = recuperaIdDia(dayOfMonth,month,year);
-                        muestraDiaRutina(diaSemana);
+                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                        int diaSemana = recuperaIdDia(date.getDate());
+                        muestraDiaDieta(diaSemana);
 
                     }
-                });*/
+                });
+
+
 
             }
 
@@ -282,7 +293,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     public void llamaDialogo(){
         //Llamo al dialogo
         transaction = getFragmentManager().beginTransaction();
-        muestraDietas=new MuestraListView_Dialog(null,dietasFiltradas);
+        muestraDietas=new MuestraListView_Dialog(null,dietasFiltradas,null,null);
         muestraDietas.setDialogMuestrasListener(this);
         muestraDietas.setCancelable(false);
         muestraDietas.show(transaction,null);
@@ -302,17 +313,27 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     }
 
     @Override
+    public void onMuestraEjercicio(Ejercicio ejercicio) {
+
+    }
+
+    @Override
+    public void onMuestraPlato(Plato platos) {
+
+    }
+
+    @Override
     public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
         dietaCambio=dietaSeleccionada;
         Dieta inserccionDieta= new Dieta();
-        inserccionDieta.setId_dieta(rutinaSeleccionada.getId_rutina());
+        inserccionDieta.setId_dieta(dietaSeleccionada.getId_dieta());
 
 
         //Llamo al metodo para realizar el cambio.
 
         DatabaseReference dbUpdateDieta = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
         dbUpdateDieta.child("dieta").setValue(inserccionDieta);
-        dbUpdateDieta.child("objetivo").setValue(objetivoSeleccionado);
+        dbUpdateDieta.child("objetivo").setValue(dietaSeleccionada);
         userSinDieta=false;
 
     }
@@ -372,44 +393,36 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
     }
 
-    public int recuperaIdDia(int dia,int mes,int anyo){
+    public int recuperaIdDia(Date date){
 
         int idDia=0;
 
         //Parseamos la fecha a nombre del dia
 
-        String fecha=dia+1+"/"+mes+"/"+anyo;
-        SimpleDateFormat formato1 = new SimpleDateFormat("dd/mm/yyyy");
-        Date fechaDate = new Date();
-        try {
-            fechaDate = formato1.parse(fecha);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         SimpleDateFormat formato2 = new SimpleDateFormat("EEEE");
-        String diaNombre = formato2.format(fechaDate);
+        String diaNombre = formato2.format(date);
 
         //Convertimos el nombre del dia en el id
 
-        if(diaNombre.equals("Monday")){
+        if((diaNombre.equals("Monday"))||(diaNombre.equals("Lunes"))){
             idDia=0;
         }
-        else if(diaNombre.equals("Tuesday")){
+        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("Martes"))){
             idDia=1;
         }
-        else if(diaNombre.equals("Wednesday")){
+        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("Miercoles"))){
             idDia=2;
         }
-        else if(diaNombre.equals("Thursday")){
+        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("Jueves"))){
             idDia=3;
         }
-        else if(diaNombre.equals("Friday")){
+        else if((diaNombre.equals("Friday"))||(diaNombre.equals("Viernes"))){
             idDia=4;
         }
-        else if(diaNombre.equals("Saturday")){
+        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("Sabado"))){
             idDia=5;
         }
-        else if(diaNombre.equals("Sunday")){
+        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("Domingo"))){
             idDia=6;
         }
 
@@ -419,59 +432,96 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
     //Metodo que llama al dialogo que toca para mostrar las rutinas
 
-    /*public void muestraDiaDieta(int id_dia){
+    public void muestraDiaDieta(int id_dia){
 
         boolean vacio=true;
-        int diasDieta = 6;
-        ArrayList<Integer>dias = new ArrayList<>();
-        final ArrayList<Dieta>dietasDias = new ArrayList<>();
-        dias = 6;
-        diaDietas=1;
 
-        for(int i=0;i<dias.size();i++){
+        final ArrayList<Dieta_Plato>dietaPlatos = new ArrayList<>();
 
-            if(id_dia==dias.get(i)){
+        diaDieta=1;
+        dietaPlatos.clear();
+        ArrayList<Plato>platosDia = new ArrayList<>();
 
-                //Recupero la rutina del usuario de la bd
-
-                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-
-                //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-                ValueEventListener eventListener;
-
-                eventListener= new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        platos.clear();
-
-                        dietaRecuperada = dataSnapshot.child("Dieta").child(Integer.toString(platos.get())).getValue(Dieta.class);
-                        for(int i=0;i<dietaRecuperada.getPlato().size();i++){
-                            if(dietaRecuperada.getPlato().get(i).getDia_semana()==diaDietas){
-                                platos.add(dietaRecuperada.getPlato().get(i));
-                                Toasty.info(DietasActivity.this,Integer.toString(plato.get(i).getId_dieta()),Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                };
-
-                db.addValueEventListener(eventListener);
-
-                vacio=false;
-
+        for(int i=0;i<7;i++){
+            for(int j=0;j<dietaRecuperada.getPlato().size();j++){
+                if(dietaRecuperada.getPlato().get(j).getDia_semana()==diaDieta){
+                    dietaPlatos.add(dietaRecuperada.getPlato().get(j));
+                }
             }
+
+            //Recupero y filtro los ejercicios
+
+            platosDia=recuperarPlato(dietaPlatos);
+
+            //Llamo al dialogo y le paso los ejercicios filtrados
+
+            //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get() y el ejercicio seleccionado
+
+            //Bucle para mostrar los valores del array
+
+                    /*for(int q=0;q<rutinaEjercicios.size();q++) {
+                        Toasty.info(RutinasActivity.this, Integer.toString(rutinaEjercicios.get(q).getId_ejercicio()), Toast.LENGTH_SHORT).show();
+                    }*/
+
+
+
+
+
+
 
         }
 
         if(vacio==true){
-            Toasty.info(DietasActivity.this,"Este dia no esta asignado en tu dieta",Toast.LENGTH_SHORT).show();
-        }*/
+            Toasty.info(DietasActivity.this,"Este dia no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public ArrayList<Plato>recuperarPlato(final ArrayList<Dieta_Plato> dia_dieta){
+
+        DatabaseReference dbDietas = FirebaseDatabase.getInstance().getReference().child("Dieta");
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        ValueEventListener eventListener4;
+
+        listaPlato.clear();
+
+        eventListener4 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                GenericTypeIndicator<ArrayList<Plato>> t = new GenericTypeIndicator<ArrayList<Plato>>() {};
+                listaPlato = dataSnapshot.getValue(t);
+
+                for(int i=0;i<dia_dieta.size();i++){
+
+                    for(int j=1;j<listaPlato.size();j++){
+
+                        if(dia_dieta.get(i).getId_plato()==listaPlato.get(j).getId_plato()){
+                            listaPlatoFiltrado.add(listaPlato.get(j));
+                        }
+
+                    }
+
+                }
+
+                for(int q=0;q<listaPlatoFiltrado.size();q++){
+                    Toasty.info(DietasActivity.this,listaPlatoFiltrado.get(q).getNombre(),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        dbDietas.addValueEventListener(eventListener4);
+
+        return listaPlatoFiltrado;
+
+    }
 
 }

@@ -24,4 +24,9 @@ public class Plato {
 	public void setPeso(String peso) {
 		this.peso = peso;
 	}
+
+	public String toString(){
+		return this.getNombre();
+	}
+
 }

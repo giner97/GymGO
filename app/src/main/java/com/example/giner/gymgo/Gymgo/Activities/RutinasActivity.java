@@ -13,12 +13,14 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.DatosEjercicioDialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.numDias_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Ejercicio;
 import com.example.giner.gymgo.Objetos.Objetivo;
+import com.example.giner.gymgo.Objetos.Plato;
 import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.Objetos.Rutina_Ejercicio;
 import com.example.giner.gymgo.Objetos.Rutina_User;
@@ -61,8 +63,11 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
         private ArrayList<Rutina> rutinasArray = new ArrayList<>();
         private ArrayList<Rutina> rutinasFiltradas= new ArrayList<>();
+        private ArrayList<Rutina_Ejercicio>rutinaEjercicios;
         private ArrayAdapter<Rutina> arrayAdapterRutinas;
         private MuestraListView_Dialog muestraRutinas;
+        private MuestraListView_Dialog muestraEjercicio;
+        private DatosEjercicioDialog datosEjercicio;
         private Rutina rutinaCambio;
         private MuestraDatos_Dialog dialogoMuestraRutina;
         private ArrayList diasSemana = new ArrayList();
@@ -73,6 +78,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private MaterialCalendarView calendario;
         private Rutina_User rutinaUsuario;
         private Rutina rutinaRecuperada;
+        private Rutina_Ejercicio rutinaEjercicio;
         private int diaRutina;
         private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
         private ArrayList<Ejercicio> listaEjerciciosFiltrada = new ArrayList<>();
@@ -429,10 +435,55 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         traduceEjercicios();
     }
 
+    @Override
+    public void onMuestraEjercicio(final Ejercicio ejercicio) {
+
+        for(int i=0;i<rutinaEjercicios.size();i++){
+            if(rutinaEjercicios.get(i).getId_ejercicio()==ejercicio.getId_ejercicio()){
+                rutinaEjercicio = rutinaEjercicios.get(i);
+            }
+        }
+
+        //Recupero el grupo muscular
+
+        DatabaseReference dbGrupo = FirebaseDatabase.getInstance().getReference().child("Grupo_muscular").child(Integer.toString(ejercicio.getGrupo_muscular()));
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        ValueEventListener eventListenerGrupo;
+
+        eventListenerGrupo = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String grupoMuscular=dataSnapshot.child("nombre_grupoMuscular").getValue(String.class);
+
+                //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get(), el ejercicio seleccionado y el grupo muscular
+
+                transaction = getFragmentManager().beginTransaction();
+                datosEjercicio = new DatosEjercicioDialog(ejercicio,rutinaEjercicio,grupoMuscular);
+                datosEjercicio.show(transaction,null);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        dbGrupo.addValueEventListener(eventListenerGrupo);
+
+    }
+
+    @Override
+    public void onMuestraPlato(Plato platos) {
+        //Este metodo no se usa en esta activity
+    }
+
     public void llamaDialogo(){
         //Llamo al dialogo
         transaction = getFragmentManager().beginTransaction();
-        muestraRutinas=new MuestraListView_Dialog(rutinasFiltradas,null);
+        muestraRutinas=new MuestraListView_Dialog(rutinasFiltradas,null, null, null);
         muestraRutinas.setDialogMuestrasListener(this);
         muestraRutinas.setCancelable(false);
         muestraRutinas.show(transaction,null);
@@ -522,27 +573,29 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         SimpleDateFormat formato2 = new SimpleDateFormat("EEEE");
         String diaNombre = formato2.format(date);
 
+        //Toast.makeText(this, diaNombre, Toast.LENGTH_SHORT).show();
+
         //Convertimos el nombre del dia en el id
 
-        if((diaNombre.equals("Monday"))||(diaNombre.equals("Lunes"))){
+        if((diaNombre.equals("Monday"))||(diaNombre.equals("lunes"))){
             idDia=0;
         }
-        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("Martes"))){
+        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("martes"))){
             idDia=1;
         }
-        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("Miercoles"))){
+        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("miércoles"))){
             idDia=2;
         }
-        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("Jueves"))){
+        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("jueves"))){
             idDia=3;
         }
-        else if((diaNombre.equals("Friday"))||(diaNombre.equals("Viernes"))){
+        else if((diaNombre.equals("Friday"))||(diaNombre.equals("viernes"))){
             idDia=4;
         }
-        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("Sabado"))){
+        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("sábado"))){
             idDia=5;
         }
-        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("Domingo"))){
+        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("domingo"))){
             idDia=6;
         }
 
@@ -556,7 +609,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
             boolean vacio=true;
             ArrayList<Integer>dias = new ArrayList<>();
-            final ArrayList<Rutina_Ejercicio>rutinaEjercicios = new ArrayList<>();
+            rutinaEjercicios = new ArrayList<>();
             dias = rutinaUsuario.getDias();
             diaRutina=1;
             rutinaEjercicios.clear();
@@ -579,13 +632,11 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
                     //Llamo al dialogo y le paso los ejercicios filtrados
 
-                    //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get() y el ejercicio seleccionado
-
-                    //Bucle para mostrar los valores del array
-
-                    /*for(int q=0;q<rutinaEjercicios.size();q++) {
-                        Toasty.info(RutinasActivity.this, Integer.toString(rutinaEjercicios.get(q).getId_ejercicio()), Toast.LENGTH_SHORT).show();
-                    }*/
+                        transaction = getFragmentManager().beginTransaction();
+                        muestraEjercicio=new MuestraListView_Dialog(null,null, ejerciciosDia, null);
+                        muestraEjercicio.setDialogMuestrasListener(this);
+                        muestraEjercicio.setCancelable(false);
+                        muestraEjercicio.show(transaction,null);
 
                     vacio=false;
 
@@ -632,16 +683,13 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
                     }
 
-                    for(int q=0;q<listaEjerciciosFiltrada.size();q++){
-                        Toasty.info(RutinasActivity.this,listaEjerciciosFiltrada.get(q).getNombreEjercicio(),Toast.LENGTH_SHORT).show();
-                    }
-
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
+
             };
 
             dbEjercicios.addValueEventListener(eventListener4);

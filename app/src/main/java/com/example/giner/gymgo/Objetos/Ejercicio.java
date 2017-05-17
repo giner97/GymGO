@@ -45,4 +45,8 @@ public class Ejercicio {
 		this.grupo_muscular = grupo_muscular;
 	}
 
+	public String toString(){
+		return this.getNombreEjercicio();
+	}
+
 }

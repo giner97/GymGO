@@ -3,6 +3,7 @@ package com.example.giner.gymgo.Gymgo.Dialogos;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.giner.gymgo.Objetos.Dieta;
+import com.example.giner.gymgo.Objetos.Ejercicio;
+import com.example.giner.gymgo.Objetos.Plato;
 import com.example.giner.gymgo.Objetos.Rutina;
 import com.example.giner.gymgo.R;
 
@@ -25,18 +28,25 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
         private ListView listaDeMuestras;
         private ArrayAdapter<Rutina> arrayAdapterRutinas;
         private ArrayAdapter<Dieta>arrayAdapterDietas;
+        private ArrayAdapter<Plato> arrayAdapterPlatos;
+        private ArrayAdapter<Ejercicio>arrayAdapterEjercicios;
+
 
     //Variables
 
-        String tipoArray="";
-        Dieta dietaSeleccionada;
-        Rutina rutinaSeleccionada;
+        private String tipoArray="";
+        private Dieta dietaSeleccionada;
+        private Rutina rutinaSeleccionada;
+        private Ejercicio ejercicioSeleccionado;
+        private Plato platoSeleccionado;
         private DialogMuestrasListener escuchador;
 
     //Arrays
 
-        ArrayList<Rutina>rutinas;
-        ArrayList<Dieta>dietas;
+        private ArrayList<Rutina>rutinas;
+        private ArrayList<Dieta>dietas;
+        private ArrayList<Ejercicio>ejercicios;
+        private ArrayList<Plato>platos;
 
     //Dialogo
 
@@ -44,14 +54,22 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
 
     //Constructores
 
-        public MuestraListView_Dialog(ArrayList<Rutina>rutinas, ArrayList<Dieta>dietas){
-            if(dietas==null) {
+        public MuestraListView_Dialog(ArrayList<Rutina>rutinas, ArrayList<Dieta>dietas, ArrayList<Ejercicio>ejercicios, ArrayList<Plato>platos){
+            if(dietas!=null) {
+                this.dietas = dietas;
+                tipoArray = "dieta";
+            }
+            else if(rutinas !=null) {
                 this.rutinas = rutinas;
                 tipoArray = "rutina";
             }
-            else if(rutinas==null) {
-                this.dietas = dietas;
-                tipoArray = "dieta";
+            else if(ejercicios!=null){
+                this.ejercicios=ejercicios;
+                tipoArray = "ejercicio";
+            }
+            else if(platos!=null){
+                this.platos=platos;
+                tipoArray = "plato";
             }
         }
 
@@ -62,7 +80,6 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
         //Primero genero un constructor de diálogos de Alerta
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Selecciona una "+tipoArray);
         View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_muestralistviews, null);
 
         //Instancio los widgets
@@ -74,6 +91,8 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
             if(listaDeMuestras!=null){
 
                 if((this.rutinas!=null)&&(arrayAdapterRutinas==null)){
+
+                    builder.setTitle("Selecciona una "+tipoArray);
 
                     //Instancio el arrayAdapter y le paso el array de rutinas
 
@@ -87,6 +106,8 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
 
                 else if((this.dietas!=null)&&(arrayAdapterDietas==null)){
 
+                    builder.setTitle("Selecciona una "+tipoArray);
+
                     //Instancio el arrayAdapter y le paso el array de dietas
 
                     arrayAdapterDietas = new ArrayAdapter<Dieta>(getActivity(),android.R.layout.simple_list_item_1,dietas);
@@ -94,6 +115,48 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
                     //Le paso el arrayAdpater al listView
 
                     listaDeMuestras.setAdapter(arrayAdapterDietas);
+
+                }
+
+                else if((this.platos!=null)&&(arrayAdapterPlatos==null)){
+
+                    builder.setTitle("Selecciona un "+tipoArray);
+
+                    //Instancio el arrayAdapter y le paso el array de dietas
+
+                    arrayAdapterPlatos = new ArrayAdapter<Plato>(getActivity(),android.R.layout.simple_list_item_1,platos);
+
+                    //Le paso el arrayAdpater al listView
+
+                    listaDeMuestras.setAdapter(arrayAdapterPlatos);
+
+                    builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dismiss();
+                        }
+                    });
+
+                }
+
+                else if((this.ejercicios!=null)&&(arrayAdapterEjercicios==null)){
+
+                    builder.setTitle("Selecciona un "+tipoArray);
+
+                    //Instancio el arrayAdapter y le paso el array de dietas
+
+                    arrayAdapterEjercicios = new ArrayAdapter<Ejercicio>(getActivity(),android.R.layout.simple_list_item_1,ejercicios);
+
+                    //Le paso el arrayAdpater al listView
+
+                    listaDeMuestras.setAdapter(arrayAdapterEjercicios);
+
+                    builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dismiss();
+                        }
+                    });
 
                 }
 
@@ -129,6 +192,16 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
             escuchador.onMuestraDieta(dietaSeleccionada);
             dismiss();
         }
+        else if (tipoArray.equals("plato")){
+            platoSeleccionado = (Plato) adapterView.getItemAtPosition(i);
+            escuchador.onMuestraPlato(platoSeleccionado);
+            dismiss();
+        }
+        else if (tipoArray.equals("ejercicio")){
+            ejercicioSeleccionado = (Ejercicio) adapterView.getItemAtPosition(i);
+            escuchador.onMuestraEjercicio(ejercicioSeleccionado);
+            dismiss();
+        }
 
     }
 
@@ -137,6 +210,8 @@ public class MuestraListView_Dialog extends DialogFragment implements AdapterVie
         public interface DialogMuestrasListener{
             void onMuestraDieta(Dieta dieta);
             void onMuestraRutina(Rutina rutina);
+            void onMuestraEjercicio(Ejercicio ejercicio);
+            void onMuestraPlato(Plato platos);
         }
 
         public void setDialogMuestrasListener(DialogMuestrasListener escuchador){
