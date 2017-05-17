@@ -33,18 +33,28 @@
         <activity
             android:name=".Gymgo.Activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name=".Gymgo.Activities.RecuperarPassActivity"
             android:label="Recuperar contraseña"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Gymgo.Activities.ModificarDatosUsuarioActivity"
-            android:label="Modifica datos" />
-        <activity android:name=".Gymgo.Activities.RutinasActivity" />
-        <activity android:name=".Gymgo.Activities.DietasActivity" />
-        <activity android:name=".Gymgo.Activities.RevisionesActivity" />
-        <activity android:name=".Gymgo.Activities.PGCActivity"></activity>
+            android:label="Modifica datos"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Gymgo.Activities.RutinasActivity"
+            android:screenOrientation="portrait"
+            android:label="Rutinas"/>
+        <activity android:name=".Gymgo.Activities.DietasActivity"
+            android:screenOrientation="portrait"
+            android:label="Dietas"/>
+        <activity android:name=".Gymgo.Activities.RevisionesActivity"
+            android:screenOrientation="portrait"
+            android:label="Revisiones"/>
+        <activity android:name=".Gymgo.Activities.PGCActivity"
+            android:screenOrientation="portrait"
+            android:label="Porcentaje de Grasa Corporal"></activity>
     </application>
 
 </manifest>

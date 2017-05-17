@@ -29,6 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,7 +70,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private int numObjetivoUser;
         private ArrayList<String>ejerciciosRutina;
         private ArrayList<Ejercicio>ejercicios;
-        private CalendarView calendario;
+        private MaterialCalendarView calendario;
         private Rutina_User rutinaUsuario;
         private Rutina rutinaRecuperada;
         private int diaRutina;
@@ -152,16 +155,23 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
                 //Instancio el calendario e importo los metodos
 
-                calendario = (CalendarView)findViewById(R.id.calendarView);
-                calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+                calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
-                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-
-                        int diaSemana = recuperaIdDia(dayOfMonth,month,year);
+                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                        int diaSemana = recuperaIdDia(date.getDate());
                         muestraDiaRutina(diaSemana);
 
                     }
                 });
+                /*calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                    @Override
+                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+
+
+
+                    }
+                });*/
 
             }
 
@@ -503,44 +513,36 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public int recuperaIdDia(int dia,int mes,int anyo){
+    public int recuperaIdDia(Date date){
 
         int idDia=0;
 
         //Parseamos la fecha a nombre del dia
 
-        String fecha=dia+1+"/"+mes+"/"+anyo;
-        SimpleDateFormat formato1 = new SimpleDateFormat("dd/mm/yyyy");
-        Date fechaDate = new Date();
-        try {
-            fechaDate = formato1.parse(fecha);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         SimpleDateFormat formato2 = new SimpleDateFormat("EEEE");
-        String diaNombre = formato2.format(fechaDate);
+        String diaNombre = formato2.format(date);
 
         //Convertimos el nombre del dia en el id
 
-        if(diaNombre.equals("Monday")){
+        if((diaNombre.equals("Monday"))||(diaNombre.equals("Lunes"))){
             idDia=0;
         }
-        else if(diaNombre.equals("Tuesday")){
+        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("Martes"))){
             idDia=1;
         }
-        else if(diaNombre.equals("Wednesday")){
+        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("Miercoles"))){
             idDia=2;
         }
-        else if(diaNombre.equals("Thursday")){
+        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("Jueves"))){
             idDia=3;
         }
-        else if(diaNombre.equals("Friday")){
+        else if((diaNombre.equals("Friday"))||(diaNombre.equals("Viernes"))){
             idDia=4;
         }
-        else if(diaNombre.equals("Saturday")){
+        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("Sabado"))){
             idDia=5;
         }
-        else if(diaNombre.equals("Sunday")){
+        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("Domingo"))){
             idDia=6;
         }
 
