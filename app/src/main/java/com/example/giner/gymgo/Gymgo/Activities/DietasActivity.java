@@ -119,8 +119,6 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toasty.error(DietasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
-
             }
 
         };
@@ -165,8 +163,6 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Toasty.error(DietasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
 
@@ -281,8 +277,6 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toasty.error(DietasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
-
             }
         };
 
@@ -382,8 +376,6 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Toasty.error(DietasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
 

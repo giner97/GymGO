@@ -136,8 +136,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
-
             }
 
         };
@@ -179,8 +177,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
 
@@ -410,8 +406,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
-
             }
         };
 
@@ -549,8 +543,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Toasty.error(RutinasActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
 
