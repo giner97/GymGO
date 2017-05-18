@@ -19,6 +19,7 @@ import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.numDias_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
 import com.example.giner.gymgo.Objetos.Ejercicio;
+import com.example.giner.gymgo.Objetos.EventDecorator;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Plato;
 import com.example.giner.gymgo.Objetos.Rutina;
@@ -34,10 +35,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter;
+import com.prolificinteractive.materialcalendarview.format.CalendarWeekDayFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 
 import es.dmoral.toasty.Toasty;
@@ -159,25 +164,16 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
                     muestraDialogNumDias();
                 }
 
-                //Instancio el calendario e importo los metodos
-
                 calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+                //EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark, );
+                //calendario.addDecorator(eventDecorator);
                 calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                         int diaSemana = recuperaIdDia(date.getDate());
                         muestraDiaRutina(diaSemana);
-
                     }
                 });
-                /*calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                    @Override
-                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-
-
-
-                    }
-                });*/
 
             }
 
@@ -610,6 +606,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             boolean vacio=true;
             ArrayList<Integer>dias = new ArrayList<>();
             rutinaEjercicios = new ArrayList<>();
+            dias = rutinaUsuario.getDias();
             dias = rutinaUsuario.getDias();
             diaRutina=1;
             rutinaEjercicios.clear();
