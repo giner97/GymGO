@@ -69,6 +69,7 @@ public class numDias_Dialog extends DialogFragment {
                     } else {
                         if(userSinRutina==true){
                             escuchador.finalizaActivity();
+                            dismiss();
                         }
                         Toasty.error(getActivity(), "El numero introducido es incorrecto", Toast.LENGTH_SHORT).show();
                     }
@@ -78,6 +79,7 @@ public class numDias_Dialog extends DialogFragment {
                 else{
                     if(userSinRutina==true){
                         escuchador.finalizaActivity();
+                        dismiss();
                     }
                     Toasty.error(getActivity(), "Te has dejado el campo vacio", Toast.LENGTH_SHORT).show();
                 }
@@ -91,6 +93,7 @@ public class numDias_Dialog extends DialogFragment {
 
                 if(userSinRutina==true){
                     escuchador.finalizaActivity();
+                    dismiss();
                 }
 
                 else{

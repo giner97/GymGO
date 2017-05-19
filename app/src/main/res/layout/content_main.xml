@@ -9,54 +9,76 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <TableRow
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            app:srcCompat="@mipmap/logogymgo"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-            <ImageButton
-                android:id="@+id/buttonRutinas"
-                android:layout_margin="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/rutinas"
-                android:background="@android:color/transparent"/>
-
-            <ImageButton
-                android:id="@+id/buttonDietas"
-                android:layout_margin="20dp"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/dietas"
-                android:background="@android:color/transparent"/>
-        </TableRow>
+                android:layout_height="match_parent"
+                android:gravity="center">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/buttonRutinas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/rutinasbutton" />
 
-            <ImageButton
-                android:id="@+id/buttonRevision"
-                android:layout_margin="20dp"
+                <ImageButton
+                    android:id="@+id/buttonDietas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/dietasbutton" />
+            </TableRow>
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/revisiones"
-                android:background="@android:color/transparent"/>
+                android:layout_height="match_parent"
+                android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/buttonPGC"
-                android:layout_margin="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/pgc"
-                android:background="@android:color/transparent"/>
-        </TableRow>
+                <ImageButton
+                    android:id="@+id/buttonRevision"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/revisionesbutton" />
 
-    </TableLayout>
+                <ImageButton
+                    android:id="@+id/buttonPGC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/pgcbutton" />
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +83,8 @@ public class MainActivity extends AppCompatActivity
     //Objetos
 
         private Usuario userDatabase;
+        private DatabaseReference dbUser;
+        private ValueEventListener eventListenerUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +108,9 @@ public class MainActivity extends AppCompatActivity
 
         //Recupero el usuario de la bd
 
-        DatabaseReference dbUser = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
+        dbUser = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
 
-        ValueEventListener eventListenerRutinas;
-
-        eventListenerRutinas = new ValueEventListener() {
+        eventListenerUser = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -130,6 +129,31 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.setDrawerListener(toggle);
+                toggle.syncState();
+
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
+
+                //Instancio los botones
+
+                botonRutina = (ImageButton) findViewById(R.id.buttonRutinas);
+                botonDieta = (ImageButton)findViewById(R.id.buttonDietas);
+                botonRevision = (ImageButton)findViewById(R.id.buttonRevision);
+                botonPGC = (ImageButton)findViewById(R.id.buttonPGC);
+
+                //Escuchadores de los botones
+
+                botonRutina.setOnClickListener(MainActivity.this);
+                botonDieta.setOnClickListener(MainActivity.this);
+                botonRevision.setOnClickListener(MainActivity.this);
+                botonPGC.setOnClickListener(MainActivity.this);
+
             }
 
             @Override
@@ -138,33 +162,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        dbUser.addValueEventListener(eventListenerRutinas);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //Instancio los botones
-
-            botonRutina = (ImageButton) findViewById(R.id.buttonRutinas);
-            botonDieta = (ImageButton)findViewById(R.id.buttonDietas);
-            botonRevision = (ImageButton)findViewById(R.id.buttonRevision);
-            botonPGC = (ImageButton)findViewById(R.id.buttonPGC);
-
-        //Escuchadores de los botones
-
-            botonRutina.setOnClickListener(this);
-            botonDieta.setOnClickListener(this);
-            botonRevision.setOnClickListener(this);
-            botonPGC.setOnClickListener(this);
+        dbUser.addValueEventListener(eventListenerUser);
 
 
     }
@@ -256,6 +254,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void cerrarSesion(){
+        cerrarConexiones();
         FirebaseAuth.getInstance().signOut();
         finish();
     }
@@ -344,6 +343,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+        cerrarConexiones();
         finish();
     }
 
@@ -375,4 +375,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intencion);
         }
     }
+
+    public void cerrarConexiones(){
+        dbUser.removeEventListener(eventListenerUser);
+    }
+
 }

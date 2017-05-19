@@ -1,5 +1,7 @@
 package com.example.giner.gymgo.Objetos;
 
+import java.util.ArrayList;
+
 public class Usuario {
 
 	private String uid;
@@ -9,15 +11,16 @@ public class Usuario {
 	private double peso;
 	private double altura;
 	private int objetivo;
-	private Revision_user revision;
+	private ArrayList<Revision_user> revisiones;
 	private Rutina_User rutina;
 	private Dieta dieta;
+	private double pesoIdeal;
 
 	public Usuario() {
 
 	}
 
-	public Usuario(String uid, String nombre, String apellidos, String email, double peso, int altura, int objetivo, Revision_user revision, Rutina_User rutina, Dieta dieta) {
+	public Usuario(String uid, String nombre, String apellidos, String email, double peso, int altura, int objetivo, ArrayList<Revision_user> revisiones, Rutina_User rutina, Dieta dieta, double pesoIdeal) {
 		this.uid = uid;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -25,9 +28,10 @@ public class Usuario {
 		this.peso = peso;
 		this.altura = altura;
 		this.objetivo = objetivo;
-		this.revision = revision;
+		this.revisiones = revisiones;
 		this.rutina = rutina;
 		this.dieta = dieta;
+		this.pesoIdeal = pesoIdeal;
 	}
 
 	public String getUid() {
@@ -72,11 +76,11 @@ public class Usuario {
 	public void setObjetivo(int objetivo) {
 		this.objetivo = objetivo;
 	}
-	public Revision_user getRevision() {
-		return revision;
+	public ArrayList<Revision_user> getRevisiones() {
+		return revisiones;
 	}
-	public void setRevision(Revision_user revision) {
-		this.revision = revision;
+	public void setRevisiones(ArrayList<Revision_user> revisiones) {
+		this.revisiones = revisiones;
 	}
 	public Rutina_User getRutina() {
 		return rutina;
@@ -90,7 +94,10 @@ public class Usuario {
 	public void setDieta(Dieta dienta) {
 		this.dieta = dienta;
 	}
-	
-	
-	
+	public double getPesoIdeal() {
+		return pesoIdeal;
+	}
+	public void setPesoIdeal(double pesoIdeal) {
+		this.pesoIdeal = pesoIdeal;
+	}
 }

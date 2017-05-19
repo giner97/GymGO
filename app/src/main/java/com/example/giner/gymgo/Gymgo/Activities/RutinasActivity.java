@@ -87,6 +87,21 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private int diaRutina;
         private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
         private ArrayList<Ejercicio> listaEjerciciosFiltrada = new ArrayList<>();
+        private DatabaseReference dbObjetivos=null;
+        private DatabaseReference dbRutina=null;
+        private DatabaseReference db=null;
+        private DatabaseReference dbRutinas=null;
+        private DatabaseReference dbGrupo=null;
+        private DatabaseReference dbUpdateRutina=null;
+        private DatabaseReference dbEjercicios=null;
+        private DatabaseReference dbEjercicio=null;
+        private ValueEventListener eventListener=null;
+        private ValueEventListener eventListener2=null;
+        private ValueEventListener eventListener3=null;
+        private ValueEventListener eventListenerRutinas=null;
+        private ValueEventListener eventListenerGrupo=null;
+        private ValueEventListener eventListener4=null;
+        private ValueEventListener eventListener5=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +117,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Recupero los objetivos de la bd
 
-            DatabaseReference dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
+            dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-            ValueEventListener eventListener;
 
         eventListener = new ValueEventListener() {
             @Override
@@ -144,11 +157,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Recupero la rutina de la bd
 
-        DatabaseReference dbRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+        dbRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener2;
 
         eventListener2 = new ValueEventListener() {
             @Override
@@ -186,11 +197,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Recupero la rutina del usuario de la bd
 
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance().getReference();
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener3;
 
         eventListener3= new ValueEventListener() {
             @Override
@@ -262,12 +271,14 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(diasSemana.size()>numDias){
                     if(userSinRutina==true){
+                        cerrarConexiones();
                         finish();
                     }
                     Toasty.error(RutinasActivity.this,"Has introducido mas dias de los que vas a ir al gimnasio", Toast.LENGTH_SHORT).show();
                 }
                 else if(diasSemana.size()<numDias){
                     if(userSinRutina==true){
+                        cerrarConexiones();
                         finish();
                     }
                     Toasty.error(RutinasActivity.this,"Has introducido menos dias de los que vas a ir al gimnasio", Toast.LENGTH_SHORT).show();
@@ -292,6 +303,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(userSinRutina==true){
+                    cerrarConexiones();
                     finish();
                 }
                 else{
@@ -328,6 +340,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(userSinRutina==true){
+                    cerrarConexiones();
                     finish();
                 }
                 else{
@@ -362,6 +375,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void finalizaActivity() {
+        cerrarConexiones();
         finish();
     }
 
@@ -371,11 +385,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Recupero las rutinas de la bd
 
-            DatabaseReference dbRutinas = FirebaseDatabase.getInstance().getReference().child("rutina");
+            dbRutinas = FirebaseDatabase.getInstance().getReference().child("rutina");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-            ValueEventListener eventListenerRutinas;
 
         eventListenerRutinas = new ValueEventListener() {
             @Override
@@ -436,11 +448,9 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Recupero el grupo muscular
 
-        DatabaseReference dbGrupo = FirebaseDatabase.getInstance().getReference().child("Grupo_muscular").child(Integer.toString(ejercicio.getGrupo_muscular()));
+        dbGrupo = FirebaseDatabase.getInstance().getReference().child("Grupo_muscular").child(Integer.toString(ejercicio.getGrupo_muscular()));
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListenerGrupo;
 
         eventListenerGrupo = new ValueEventListener() {
             @Override
@@ -490,7 +500,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         //Llamo al metodo para realizar el cambio.
 
-            DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+            dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
             dbUpdateRutina.child("rutina").setValue(insercionRutina);
             dbUpdateRutina.child("objetivo").setValue(objetivoSeleccionado);
             userSinRutina=false;
@@ -500,6 +510,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onCancelled() {
         if(userSinRutina==true){
+            cerrarConexiones();
             finish();
         }
     }
@@ -508,13 +519,11 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
     public void traduceEjercicios(){
 
-        DatabaseReference dbEjercicios = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
+        dbEjercicios = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
 
-        ValueEventListener eventListener;
-
-        eventListener = new ValueEventListener() {
+        eventListener4 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -548,7 +557,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         };
 
-        dbEjercicios.addValueEventListener(eventListener);
+        dbEjercicios.addValueEventListener(eventListener4);
 
     }
 
@@ -645,15 +654,13 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
         public ArrayList<Ejercicio>recuperaEjercicios(final ArrayList<Rutina_Ejercicio> rutina_ejercicio){
 
-            DatabaseReference dbEjercicios = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
+            dbEjercicio = FirebaseDatabase.getInstance().getReference().child("Ejercicio");
 
             //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
 
-            ValueEventListener eventListener4;
-
             listaEjerciciosFiltrada.clear();
 
-            eventListener4 = new ValueEventListener() {
+            eventListener5 = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -681,10 +688,31 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
 
             };
 
-            dbEjercicios.addValueEventListener(eventListener4);
+            dbEjercicio.addValueEventListener(eventListener5);
 
             return listaEjerciciosFiltrada;
 
         }
+
+    @Override
+    public void onBackPressed() {
+        cerrarConexiones();
+        finish();
+    }
+
+    public void cerrarConexiones(){
+        try {
+            dbObjetivos.removeEventListener(eventListener);
+            dbRutina.removeEventListener(eventListener2);
+            db.removeEventListener(eventListener3);
+            dbRutinas.removeEventListener(eventListenerRutinas);
+            dbGrupo.removeEventListener(eventListenerGrupo);
+            dbEjercicios.removeEventListener(eventListener4);
+            dbEjercicio.removeEventListener(eventListener5);
+        }
+        catch (Exception e){
+
+        }
+    }
 
 }

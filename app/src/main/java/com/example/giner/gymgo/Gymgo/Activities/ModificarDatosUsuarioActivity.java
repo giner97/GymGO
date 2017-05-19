@@ -46,6 +46,10 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         private int objetivoSeleccionado;
         private CharSequence[] objetivos;
         private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
+        private DatabaseReference dbUsuarios;
+        private ValueEventListener eventListener2;
+        private DatabaseReference dbObjetivos;
+        private ValueEventListener eventListener;
 
 
     @Override
@@ -53,7 +57,7 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_datos_usuario);
 
-        /*DE INSTANCIA LOS WIDGETS*/
+        /*SE INSTANCIA LOS WIDGETS*/
 
         aceptarCambios=(Button)findViewById(R.id.aceptarCambios);
         descartarCambios=(Button)findViewById(R.id.descartarCambios);
@@ -68,10 +72,9 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         userLogueado = FirebaseAuth.getInstance().getCurrentUser();
             idUserLogueado=userLogueado.getUid();
 
-        final DatabaseReference dbUsuarios = FirebaseDatabase.getInstance().getReference()
-                        .child("User").child(idUserLogueado);
+        dbUsuarios = FirebaseDatabase.getInstance().getReference().child("User").child(idUserLogueado);
 
-        dbUsuarios.addValueEventListener(new ValueEventListener() {
+        eventListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -90,6 +93,16 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
                 }
 
+                else if((dataSnapshot).child("peso").getValue(Double.class)>0||(dataSnapshot.child("altura").getValue(Double.class)>0)){
+
+                    if(finish==false){
+                        altura = Double.parseDouble(dataSnapshot.child("altura").getValue().toString());
+                        peso = Double.parseDouble(dataSnapshot.child("peso").getValue().toString());
+                        lblaltura.setText(Double.toString(altura));
+                        lblpeso.setText(Double.toString(peso));
+                    }
+                }
+
                 objetivoSeleccionado = Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
 
             }
@@ -99,15 +112,15 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
             }
 
-        });
+        };
+
+        dbUsuarios.addValueEventListener(eventListener2);
 
         //Recupero los objetivos de la bd
 
-        DatabaseReference dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
+        dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener;
 
         eventListener = new ValueEventListener() {
             @Override
@@ -136,8 +149,6 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Toasty.error(ModificarDatosUsuarioActivity.this,databaseError.toString(),Toast.LENGTH_SHORT).show();
 
             }
 
@@ -174,8 +185,10 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
             if((!nombre.isEmpty())&&(!apellidos.isEmpty())&&(!lblaltura.getText().toString().isEmpty())&&(!lblpeso.getText().toString().isEmpty())&&(objetivoSeleccionado!=0)){
 
-                peso=Double.parseDouble(lblpeso.getText().toString());
-                altura=Double.parseDouble(lblaltura.getText().toString());
+                if((Double.parseDouble(lblpeso.getText().toString())>0)&&(Double.parseDouble(lblaltura.getText().toString())>0)) {
+
+                    peso = Double.parseDouble(lblpeso.getText().toString());
+                    altura = Double.parseDouble(lblaltura.getText().toString());
 
                     //Actualizamos los datos en la bd
 
@@ -186,8 +199,15 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
                     dbUpdateRutina.child("apellidos").setValue(apellidos);
                     dbUpdateRutina.child("objetivo").setValue(objetivoSeleccionado);
 
-                    finish=true;
+                    finish = true;
+                    cerrarConexiones();
                     finish();
+
+                }
+
+                else{
+                    Toasty.warning(this, "El peso y la altura deben ser mayores que 0", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -200,6 +220,7 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         }
 
         else if(v.getId()==R.id.descartarCambios){
+            cerrarConexiones();
             finish();
         }
 
@@ -242,4 +263,10 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
             builder.show();
 
     }
+
+    public void cerrarConexiones(){
+        dbUsuarios.removeEventListener(eventListener2);
+        dbObjetivos.removeEventListener(eventListener);
+    }
+
 }
