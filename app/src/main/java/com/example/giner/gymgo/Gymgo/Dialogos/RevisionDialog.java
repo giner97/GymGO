@@ -63,7 +63,15 @@ public class RevisionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if((!altura.getText().toString().isEmpty())&&(!peso.getText().toString().isEmpty())){
                             if((Double.parseDouble(peso.getText().toString())>0)&&(Double.parseDouble(altura.getText().toString())>0)) {
-                                escuchador.pasaDatos(Double.parseDouble(altura.getText().toString()), Double.parseDouble(peso.getText().toString()), userSinRevision);
+                                if(Double.parseDouble(altura.getText().toString())<3) {
+                                    escuchador.pasaDatos(Double.parseDouble(altura.getText().toString()), Double.parseDouble(peso.getText().toString()), userSinRevision);
+                                }
+                                else{
+                                    Toasty.error(getActivity(),"La altura máxima son 3 metros", Toast.LENGTH_SHORT).show();
+                                    if(userSinRevision==true) {
+                                        escuchador.finalizaActivity();
+                                    }
+                                }
                             }
                             else{
                                 Toasty.error(getActivity(),"El peso y la altura deben ser mayores que 0", Toast.LENGTH_SHORT).show();

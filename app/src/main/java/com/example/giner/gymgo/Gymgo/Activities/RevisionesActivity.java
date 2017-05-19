@@ -50,8 +50,6 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
         private Usuario user;
         private FragmentTransaction transactionRevisiones;
         private RevisionDialog revisionDialog;
-        private Query consultaRevisiones;
-        private ValueEventListener eventListener;
         private DatabaseReference dbUser;
         private ValueEventListener eventListener2;
         private DatabaseReference dbRevisiones;
@@ -99,53 +97,6 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
 
         dbUser.addValueEventListener(eventListener2);
 
-        //Recupero las revisiones del usuario
-
-        consultaRevisiones = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser).child("revisiones").limitToLast(5).orderByChild("fecha_revision");
-
-        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if(dataSnapshot.getValue()==null){
-                    userSinRevisiones = true;
-                    usuarioSinRevision();
-                }
-
-                else if(dataSnapshot.getValue()!=null){
-
-                    userSinRevisiones = false;
-
-                    GenericTypeIndicator<ArrayList<Revision_user>> t = new GenericTypeIndicator<ArrayList<Revision_user>>() {};
-                    revisionesUsuario = dataSnapshot.getValue(t);
-
-                    ArrayList<Double>pesosRevisiones = new ArrayList<>();
-                    pesosRevisiones.clear();
-                    pesosRevisiones = cargaGrafico(revisionesUsuario);
-
-                        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                                new DataPoint(0, pesosRevisiones.get(0)),
-                                new DataPoint(1, pesosRevisiones.get(1)),
-                                new DataPoint(2, pesosRevisiones.get(2)),
-                                new DataPoint(3, pesosRevisiones.get(3)),
-                                new DataPoint(4, pesosRevisiones.get(4))
-                        });
-                        graph.removeAllSeries();
-                        graph.addSeries(series);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        };
-
-        consultaRevisiones.addValueEventListener(eventListener);
-
         //Recupero el usuario
 
         dbRevisiones = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser).child("revisiones");
@@ -163,6 +114,20 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
                     GenericTypeIndicator<ArrayList<Revision_user>> t = new GenericTypeIndicator<ArrayList<Revision_user>>() {};
                     listaRevisiones = dataSnapshot.getValue(t);
 
+                    ArrayList<Double>pesosRevisiones = new ArrayList<>();
+                    pesosRevisiones.clear();
+                    pesosRevisiones = cargaGrafico(listaRevisiones);
+
+                    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                            new DataPoint(0, pesosRevisiones.get(0)),
+                            new DataPoint(1, pesosRevisiones.get(1)),
+                            new DataPoint(2, pesosRevisiones.get(2)),
+                            new DataPoint(3, pesosRevisiones.get(3)),
+                            new DataPoint(4, pesosRevisiones.get(4))
+                    });
+                    graph.removeAllSeries();
+                    graph.addSeries(series);
+
                     //Instancio los widgets
 
                         buttonAnyadir = (Button)findViewById(R.id.buttonAnyadir);
@@ -173,6 +138,11 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
                         buttonAnyadir.setOnClickListener(RevisionesActivity.this);
                         buttonConsultar.setOnClickListener(RevisionesActivity.this);
 
+                }
+
+                else if(dataSnapshot.getValue()==null){
+                    userSinRevisiones = true;
+                    usuarioSinRevision();
                 }
 
             }
@@ -321,7 +291,6 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
 
     public void cerrarConexiones(){
         dbUser.removeEventListener(eventListener2);
-        consultaRevisiones.removeEventListener(eventListener);
         dbRevisiones.removeEventListener(eventListener3);
     }
 
@@ -333,16 +302,26 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
 
     public ArrayList<Double>cargaGrafico(ArrayList<Revision_user>revisiones){
 
-        ArrayList<Double>resultado = new ArrayList<>();
-        for(int i=0;i<revisiones.size();i++){
-            if(revisiones.get(i)!=null) {
+        ArrayList<Double> resultado = new ArrayList<>();
+
+        if(revisiones.size()<=5) {
+
+            for (int i = 0; i < revisiones.size(); i++) {
+                if (revisiones.get(i) != null) {
+                    resultado.add(revisiones.get(i).getPeso_revision());
+                }
+            }
+            for (int j = 0; j < (5 - revisiones.size()); j++) {
+                resultado.add((double) 0);
+            }
+        }
+
+        else{
+            for(int i=revisiones.size()-5;i<revisiones.size();i++){
                 resultado.add(revisiones.get(i).getPeso_revision());
             }
         }
 
-        for(int j=0;j<(5-revisiones.size());j++){
-            resultado.add((double)0);
-        }
         return resultado;
     }
 

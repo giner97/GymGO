@@ -17,7 +17,8 @@
                 android:id="@+id/textPeso"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
                 android:layout_weight="1"
                 android:text="Peso: "
                 android:textSize="20dp" />
@@ -26,7 +27,9 @@
                 android:id="@+id/editPeso"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="Introduce tu peso"
@@ -42,7 +45,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="Altura: "
                 android:textSize="20dp" />
@@ -51,10 +55,13 @@
                 android:id="@+id/editAltura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="15dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Introduce tu altura (Metros)"
+                android:hint="Introduce tu altura"
                 android:inputType="numberDecimal" />
 
         </LinearLayout>

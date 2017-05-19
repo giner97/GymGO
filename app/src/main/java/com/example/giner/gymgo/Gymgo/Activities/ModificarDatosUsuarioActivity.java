@@ -187,21 +187,29 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
                 if((Double.parseDouble(lblpeso.getText().toString())>0)&&(Double.parseDouble(lblaltura.getText().toString())>0)) {
 
-                    peso = Double.parseDouble(lblpeso.getText().toString());
-                    altura = Double.parseDouble(lblaltura.getText().toString());
+                    if(Double.parseDouble(lblaltura.getText().toString())<3) {
 
-                    //Actualizamos los datos en la bd
+                        peso = Double.parseDouble(lblpeso.getText().toString());
+                        altura = Double.parseDouble(lblaltura.getText().toString());
 
-                    DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
-                    dbUpdateRutina.child("altura").setValue(altura);
-                    dbUpdateRutina.child("peso").setValue(peso);
-                    dbUpdateRutina.child("nombre").setValue(nombre);
-                    dbUpdateRutina.child("apellidos").setValue(apellidos);
-                    dbUpdateRutina.child("objetivo").setValue(objetivoSeleccionado);
+                        //Actualizamos los datos en la bd
 
-                    finish = true;
-                    cerrarConexiones();
-                    finish();
+                        DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
+                        dbUpdateRutina.child("altura").setValue(altura);
+                        dbUpdateRutina.child("peso").setValue(peso);
+                        dbUpdateRutina.child("nombre").setValue(nombre);
+                        dbUpdateRutina.child("apellidos").setValue(apellidos);
+                        dbUpdateRutina.child("objetivo").setValue(objetivoSeleccionado);
+
+                        finish = true;
+                        cerrarConexiones();
+                        finish();
+
+                    }
+
+                    else{
+                        Toasty.warning(this, "La altura máxima son 3 metros", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
 
