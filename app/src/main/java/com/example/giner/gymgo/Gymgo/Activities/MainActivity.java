@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity
 
         //Seteo los datos del usuario
 
-            Log.d(TAG, userLogueado.getEmail());
             if(userLogueado.getDisplayName()!=null){
                 user.setText(userLogueado.getUid().toString());
             }
