@@ -173,17 +173,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
                     muestraDialogNumDias();
                 }
 
-                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
-                //EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark, );
-                //calendario.addDecorator(eventDecorator);
-                calendario.setOnDateChangedListener(new OnDateSelectedListener() {
-                    @Override
-                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                        int diaSemana = recuperaIdDia(date.getDate());
-                        muestraDiaRutina(diaSemana);
-                    }
-                });
-
             }
 
             @Override
@@ -209,6 +198,25 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
                     rutinaRecuperada = dataSnapshot.child("rutina").child(Integer.toString(rutinaUsuario.getId_rutina())).getValue(Rutina.class);
                 }
 
+                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+                //EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark, );
+                //calendario.addDecorator(eventDecorator);
+                calendario.setOnDateChangedListener(new OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                        int diaSemana = recuperaIdDia(date.getDate());
+                        muestraDiaRutina(diaSemana);
+                    }
+                });
+
+                //Intancio los widgets
+
+                cambiarRutina = (Button)findViewById(R.id.cambiarRutina);
+
+                //Escuchadores
+
+                cambiarRutina.setOnClickListener(RutinasActivity.this);
+
             }
 
             @Override
@@ -218,14 +226,6 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         db.addValueEventListener(eventListener3);
-
-        //Intancio los widgets
-
-            cambiarRutina = (Button)findViewById(R.id.cambiarRutina);
-
-        //Escuchadores
-
-            cambiarRutina.setOnClickListener(this);
 
     }
 

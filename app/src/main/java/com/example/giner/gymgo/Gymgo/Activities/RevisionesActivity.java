@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.DatosEjercicioDialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.DatosRevisionesDialog;
+import com.example.giner.gymgo.Gymgo.Dialogos.MuestraRevisionesListView_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.RevisionDialog;
 import com.example.giner.gymgo.Objetos.Revision_user;
 import com.example.giner.gymgo.Objetos.Usuario;
@@ -18,7 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -31,7 +33,7 @@ import java.util.Date;
 
 import es.dmoral.toasty.Toasty;
 
-public class RevisionesActivity extends AppCompatActivity implements View.OnClickListener, RevisionDialog.OnRevision{
+public class RevisionesActivity extends AppCompatActivity implements View.OnClickListener, RevisionDialog.OnRevision, MuestraRevisionesListView_Dialog.DialogRevisionesListView {
 
     //Widgets
 
@@ -50,6 +52,8 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
         private Usuario user;
         private FragmentTransaction transactionRevisiones;
         private RevisionDialog revisionDialog;
+        private MuestraRevisionesListView_Dialog listViewRevisiones;
+        private DatosRevisionesDialog datosRevisiones;
         private DatabaseReference dbUser;
         private ValueEventListener eventListener2;
         private DatabaseReference dbRevisiones;
@@ -173,6 +177,12 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
 
         }
         else if(v.getId()==buttonConsultar.getId()){
+
+            //Llamo al dialogo de mostrar el listView con las rutinas
+            transactionRevisiones = getFragmentManager().beginTransaction();
+            listViewRevisiones=new MuestraRevisionesListView_Dialog(listaRevisiones);
+            listViewRevisiones.setDialogRevisionesListViewListener(this);
+            listViewRevisiones.show(transactionRevisiones,null);
 
         }
 
@@ -325,4 +335,10 @@ public class RevisionesActivity extends AppCompatActivity implements View.OnClic
         return resultado;
     }
 
+    @Override
+    public void muestraRevisio(Revision_user revision) {
+        transactionRevisiones = getFragmentManager().beginTransaction();
+        datosRevisiones = new DatosRevisionesDialog(revision);
+        datosRevisiones.show(transactionRevisiones,null);
+    }
 }

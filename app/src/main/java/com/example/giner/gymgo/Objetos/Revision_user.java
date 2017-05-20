@@ -50,4 +50,8 @@ public class Revision_user {
 		this.fecha_revision = fecha_revision;
 	}
 
+	public String toString(){
+		return "Revision: "+(this.id_revision+1)+" Fecha: "+this.fecha_revision;
+	}
+
 }
