@@ -11,10 +11,11 @@ import java.util.HashSet;
 
 public class EventDecorator implements DayViewDecorator {
     private final int color;
-    private final HashSet<CalendarDay> dates;
+    private HashSet<CalendarDay> dates = new HashSet<>();
 
     public EventDecorator(int color, Collection<CalendarDay> dates) {
         this.color = color;
+        this.dates.clear();
         this.dates = new HashSet<>(dates);
     }
 

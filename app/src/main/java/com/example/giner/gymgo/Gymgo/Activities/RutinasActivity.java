@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
@@ -102,6 +103,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         private ValueEventListener eventListenerGrupo=null;
         private ValueEventListener eventListener4=null;
         private ValueEventListener eventListener5=null;
+        private List<CalendarDay>listDiasPintados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +193,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
 
         eventListener3= new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -199,13 +202,24 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
-                //EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark, );
-                //calendario.addDecorator(eventDecorator);
+                listDiasPintados = new ArrayList<CalendarDay>();
+                listDiasPintados.clear();
+                listDiasPintados = pintaDias();
+                EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark,listDiasPintados);
+                calendario.removeDecorators();
+                calendario.addDecorator(eventDecorator);
                 calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                        int diaSemana = recuperaIdDia(date.getDate());
-                        muestraDiaRutina(diaSemana);
+
+                        Calendar fechaHoy = Calendar.getInstance();
+                        Calendar fechaFin = Calendar.getInstance();
+                        fechaFin.add(Calendar.YEAR,1);
+
+                        if((fechaHoy.before(date.getCalendar()))&&(fechaFin.after(date.getCalendar()))) {
+                            int diaSemana = recuperaIdDia(date.getDate());
+                            muestraDiaRutina(diaSemana);
+                        }
                     }
                 });
 
@@ -713,6 +727,41 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         catch (Exception e){
 
         }
+    }
+
+    public List<CalendarDay> pintaDias(){
+
+        //Variables
+
+            Date fechaHoy = new Date();
+            Calendar fechaInicio = Calendar.getInstance();
+            Calendar fechaFin = Calendar.getInstance();
+            List<CalendarDay>listDias = new ArrayList<CalendarDay>();
+
+        //Saco la fecha de inicio y la fecha final
+
+            fechaInicio.setTime(fechaHoy);
+            fechaFin.setTime(fechaHoy);
+            fechaFin.add(Calendar.YEAR, 1);
+
+        listDias.clear();
+
+        while(fechaInicio.before(fechaFin)){
+
+            int idDia=recuperaIdDia(fechaInicio.getTime());
+
+            for(int i=0;i<rutinaUsuario.getDias().size();i++){
+
+                if(idDia==rutinaUsuario.getDias().get(i)){
+                    listDias.add(CalendarDay.from(fechaInicio));
+                }
+
+            }
+            fechaInicio.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        return listDias;
+
     }
 
 }
