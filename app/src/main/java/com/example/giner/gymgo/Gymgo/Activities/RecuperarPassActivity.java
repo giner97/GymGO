@@ -18,6 +18,8 @@ import com.example.giner.gymgo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 import es.dmoral.toasty.Toasty;
@@ -156,7 +158,17 @@ public class RecuperarPassActivity extends AppCompatActivity implements View.OnC
                             finish();
                         } else {
                             Log.d(TAG, "Email no registrado");
-                            Toasty.error(RecuperarPassActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                            try{
+                                throw task.getException();
+                            }
+
+                            catch(FirebaseAuthInvalidUserException e) {
+                                Toasty.error(RecuperarPassActivity.this,"El email no existe", Toast.LENGTH_SHORT).show();
+                            }
+
+                            catch (Exception e){
+                                Toasty.error(RecuperarPassActivity.this,"Error al recuperar la contraseña", Toast.LENGTH_SHORT).show();
+                            }
                             onRestart();
                         }
                     }

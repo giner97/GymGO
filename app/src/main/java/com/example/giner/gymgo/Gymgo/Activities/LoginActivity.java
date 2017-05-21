@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 import es.dmoral.toasty.Toasty;
@@ -145,7 +147,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 OnLoginCorrecto();
                             } else {
                                 Log.d(TAG, "Login fallido");
-                                Toasty.error(LoginActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+
+                                try{
+                                    throw task.getException();
+                                }
+
+                                catch(FirebaseAuthInvalidCredentialsException e) {
+                                    Toasty.error(LoginActivity.this,"El email o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                                }
+
+                                catch(FirebaseAuthInvalidUserException e) {
+                                    Toasty.error(LoginActivity.this,"El email no existe", Toast.LENGTH_SHORT).show();
+                                }
+
+                                catch (Exception e){
+                                    Toasty.error(LoginActivity.this,"Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+                                }
+
                                 onRestart();
                             }
                         }
@@ -154,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         else if(v.getId() == registrarse.getId()){
-            Intent intencionRegistrar = new Intent(this,registroActivity.class);
+            Intent intencionRegistrar = new Intent(this,RegistroActivity.class);
             startActivity(intencionRegistrar);
         }
 
@@ -208,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onRestart() {
         super.onRestart();
-        email.setText("");
+        //email.setText("");
         pass.setText("");
     }
 

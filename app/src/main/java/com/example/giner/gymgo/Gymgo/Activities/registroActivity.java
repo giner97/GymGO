@@ -19,11 +19,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 import es.dmoral.toasty.Toasty;
 
-public class registroActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegistroActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Variables
 
@@ -142,12 +144,23 @@ public class registroActivity extends AppCompatActivity implements View.OnClickL
                         showProgress(false);
                         if(task.isSuccessful()){
                             Log.d(TAG, "Usuario registrado");
-                            Toasty.success(registroActivity.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
+                            Toasty.success(RegistroActivity.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else{
                             Log.d(TAG, "Fallo en el registro");
-                            Toasty.error(registroActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_SHORT).show();
+                            try{
+                                throw task.getException();
+                            }
+
+                            catch(FirebaseAuthUserCollisionException e) {
+                                Toasty.error(RegistroActivity.this,"El email introducido ya esta en uso", Toast.LENGTH_SHORT).show();
+                            }
+
+                            catch (Exception e){
+                                Toasty.error(RegistroActivity.this,"Error al registrar el usuario", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     }
                 });

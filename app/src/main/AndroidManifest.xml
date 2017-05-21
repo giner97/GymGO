@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Gymgo.Activities.registroActivity"
+            android:name=".Gymgo.Activities.RegistroActivity"
             android:label="Registrar usuario"
             android:screenOrientation="portrait" />
         <activity
