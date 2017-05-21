@@ -213,6 +213,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
 
                         Calendar fechaHoy = Calendar.getInstance();
+                        fechaHoy.add(Calendar.DAY_OF_YEAR,-1);
                         Calendar fechaFin = Calendar.getInstance();
                         fechaFin.add(Calendar.YEAR,1);
 
@@ -743,6 +744,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             fechaInicio.setTime(fechaHoy);
             fechaFin.setTime(fechaHoy);
             fechaFin.add(Calendar.YEAR, 1);
+            fechaFin.add(Calendar.DAY_OF_YEAR, 1);
 
         listDias.clear();
 
