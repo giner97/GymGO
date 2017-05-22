@@ -145,6 +145,12 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
                     j++;
                 }
 
+                //Listeners de los botones
+
+                aceptarCambios.setOnClickListener(ModificarDatosUsuarioActivity.this);
+                descartarCambios.setOnClickListener(ModificarDatosUsuarioActivity.this);
+                seleccionarObjetivo.setOnClickListener(ModificarDatosUsuarioActivity.this);
+
             }
 
             @Override
@@ -155,12 +161,6 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         };
 
         dbObjetivos.addValueEventListener(eventListener);
-
-        //Listeners de los botones
-
-            aceptarCambios.setOnClickListener(this);
-            descartarCambios.setOnClickListener(this);
-            seleccionarObjetivo.setOnClickListener(this);
 
     }
 

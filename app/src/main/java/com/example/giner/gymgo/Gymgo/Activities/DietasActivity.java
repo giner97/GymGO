@@ -327,7 +327,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
         DatabaseReference dbUpdateDieta = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
         dbUpdateDieta.child("dieta").setValue(inserccionDieta);
-        dbUpdateDieta.child("objetivo").setValue(dietaSeleccionada);
+        dbUpdateDieta.child("objetivo").setValue(objetivoSeleccionado);
         userSinDieta=false;
 
     }

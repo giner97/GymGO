@@ -197,17 +197,18 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+
                 if(rutinaUsuario!=null) {
                     rutinaRecuperada = dataSnapshot.child("rutina").child(Integer.toString(rutinaUsuario.getId_rutina())).getValue(Rutina.class);
+                    listDiasPintados = new ArrayList<CalendarDay>();
+                    listDiasPintados.clear();
+                    listDiasPintados = pintaDias();
+                    EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark,listDiasPintados);
+                    calendario.removeDecorators();
+                    calendario.addDecorator(eventDecorator);
                 }
 
-                calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
-                listDiasPintados = new ArrayList<CalendarDay>();
-                listDiasPintados.clear();
-                listDiasPintados = pintaDias();
-                EventDecorator eventDecorator = new EventDecorator(R.color.colorPrimaryDark,listDiasPintados);
-                calendario.removeDecorators();
-                calendario.addDecorator(eventDecorator);
                 calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
