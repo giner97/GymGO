@@ -8,12 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
@@ -24,8 +22,8 @@ import com.example.giner.gymgo.Objetos.Ejercicio;
 import com.example.giner.gymgo.Objetos.Objetivo;
 import com.example.giner.gymgo.Objetos.Plato;
 import com.example.giner.gymgo.Objetos.Rutina;
-import com.example.giner.gymgo.Objetos.Rutina_Ejercicio;
 import com.example.giner.gymgo.R;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,11 +34,31 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.util.ArrayList;
+public class DietasActivity extends AppCompatActivity implements View.OnClickListener, MuestraListView_Dialog.DialogMuestrasListener, MuestraDatos_Dialog.OnListener{
 
-import es.dmoral.toasty.Toasty;
 
-public class DietasActivity extends AppCompatActivity implements DialogInterface.OnClickListener, View.OnClickListener, MuestraListView_Dialog.DialogMuestrasListener, MuestraDatos_Dialog.OnListener{
+    /*firebase bbbdd*/
+    DatabaseReference dbObjetivos= null;
+    ValueEventListener eventListener = null;
+
+    DatabaseReference dbDieta2 = null;
+    ValueEventListener eventListenerDietas =null;
+
+    DatabaseReference dbUpdateDieta= null;
+    DatabaseReference dbPlatos = null;
+    ValueEventListener eventListener3= null;
+
+    DatabaseReference dbDietas = null;
+    ValueEventListener eventListener4=null;
+
+    DatabaseReference db = null;
+    ValueEventListener eventListenerDb=null;
+
+    DatabaseReference dbComida = null;
+    ValueEventListener eventListenerComida=null;
+
+    /**/
+
 
 
     private Button cambiarDieta;
@@ -55,6 +73,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     private int objetivoSelecc;
     private CharSequence[] objetivos;
     private ArrayList<Objetivo> objetivosArray = new ArrayList<>();
+
+    private ArrayList<Dieta_Plato>listaPlatos;
+    private Dieta_Plato dietaplato;
+
+    private MuestraListView_Dialog muestraPlatos;
     private MuestraListView_Dialog muestraDietas;
     private ArrayList<Dieta> dietasArray = new ArrayList<>();
     private ArrayList<Dieta> dietasFiltradas = new ArrayList<>();
@@ -63,10 +86,13 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     private Dieta dietaCambio;
     private Dieta dietaUsuario;
     private Dieta dietaRecuperada;
+    private int objetivoRecuperado;
     private Boolean userSinDieta;
     private ArrayList<Plato> listaPlato = new ArrayList<>();
     private ArrayList<Plato> listaPlatoFiltrado = new ArrayList<>();
 
+
+    FirebaseUser usuarioActual;
     int numRecuperados;
     private int diaDietas;
 
@@ -83,13 +109,12 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
         Intent recibeUID=getIntent();
         uidUser=recibeUID.getStringExtra(MainActivity.KEY_UID);
+
         //Recupero los objetivos de la bd
 
-        DatabaseReference dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
+            dbObjetivos = FirebaseDatabase.getInstance().getReference().child("Objetivo");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener;
 
         eventListener = new ValueEventListener() {
             @Override
@@ -125,39 +150,58 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
         dbObjetivos.addValueEventListener(eventListener);
 
-
-        //Recupero la rutina de la bd
-
-        DatabaseReference dbRutina = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        db = FirebaseDatabase.getInstance().getReference();
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
 
-        ValueEventListener eventListener2;
+        eventListenerDb= new ValueEventListener() {
 
-        eventListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                numObjetivoUser=Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
-                dietaUsuario=dataSnapshot.child("Dieta").getValue(Dieta.class);
+                dietaRecuperada  =dataSnapshot.child("User").child(uidUser).child("dieta").getValue(Dieta.class);
+                objetivoRecuperado = Integer.valueOf(dataSnapshot.child("User").child(uidUser).child("objetivo").getValue().toString());
+                objetivoSeleccionado=objetivoRecuperado;
 
-                if(dataSnapshot.child("Dieta").getValue()==null){
+                if(dataSnapshot.child("User").child(uidUser).child("dieta").getValue()==null){
                     userSinDieta=true;
+
+                    if(objetivoRecuperado>0) {
+                        muestraDialogoDietas();
+                    }
+
+                    else{
+                        muestraDialogObjetivo();
+                    }
 
                 }
 
-
                 calendario = (MaterialCalendarView)findViewById(R.id.calendarView);
+
                 calendario.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                        int diaSemana = recuperaIdDia(date.getDate());
-                        muestraDiaDieta(diaSemana);
 
+                        Calendar fechaHoy = Calendar.getInstance();
+                        fechaHoy.add(Calendar.DAY_OF_YEAR,-1);
+                        Calendar fechaFin = Calendar.getInstance();
+                        fechaFin.add(Calendar.YEAR,1);
+
+                        if((fechaHoy.before(date.getCalendar()))&&(fechaFin.after(date.getCalendar()))) {
+                            int diaSemana = recuperaIdDia(date.getDate());
+                            muestraDiaDieta(diaSemana);
+                        }
                     }
                 });
 
+                //Intancio los widgets
 
+                cambiarDieta = (Button)findViewById(R.id.cambiarDieta);
+
+                //Escuchadores
+
+                cambiarDieta.setOnClickListener(DietasActivity.this);
 
             }
 
@@ -165,21 +209,9 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         };
 
-        dbRutina.addValueEventListener(eventListener2);
-
-
-        //Intancio los widgets
-
-        cambiarDieta = (Button)findViewById(R.id.cambiarDieta);
-
-
-        //Escuchadores
-
-        cambiarDieta.setOnClickListener(this);
-
+        db.addValueEventListener(eventListenerDb);
 
     }
 
@@ -230,7 +262,9 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.cambiarDieta){
-            muestraDialogObjetivo();
+
+            if(objetivoRecuperado>0){muestraDialogoDietas();}else{muestraDialogObjetivo();}
+
         }
     }
 
@@ -239,18 +273,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     }
 
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-
-    }
-
     public void muestraDialogoDietas(){
 
-        DatabaseReference dbDieta = FirebaseDatabase.getInstance().getReference().child("Dieta");
+        dbDieta2 = FirebaseDatabase.getInstance().getReference().child("Dieta");
 
-        ValueEventListener eventListenerRutinas;
-
-        eventListenerRutinas = new ValueEventListener() {
+        eventListenerDietas = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -280,7 +307,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
             }
         };
 
-        dbDieta.addValueEventListener(eventListenerRutinas);
+        dbDieta2.addValueEventListener(eventListenerDietas);
 
     }
 
@@ -312,7 +339,40 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     }
 
     @Override
-    public void onMuestraPlato(Plato platos) {
+    public void onMuestraPlato(Plato plato) {
+
+        for(int i=0;i<listaPlatoFiltrado.size();i++){
+            if(listaPlatoFiltrado.get(i).getId_plato()==plato.getId_plato()){
+                dietaplato = listaPlatos.get(i);
+            }
+        }
+
+        //Recupero el grupo muscular
+
+        //dbGrupo = FirebaseDatabase.getInstance().getReference().child("Tipo_comida").child(Integer.toString(platos.getGrupo_muscular()));
+
+        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
+
+        /*eventListenerGrupo = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String grupoMuscular=dataSnapshot.child("nombre_grupoMuscular").getValue(String.class);
+
+                //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get(), el ejercicio seleccionado y el grupo muscular
+/*
+                transaction = getFragmentManager().beginTransaction();
+                datosEjercicio = new DatosEjercicioDialog(platos,listaPlato,grupoMuscular);
+                datosEjercicio.show(transaction,null);*/
+
+           /* }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        dbGrupo.addValueEventListener(eventListenerGrupo);*/
 
     }
 
@@ -320,12 +380,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     public void onObjetoSeleccionado(Rutina rutinaSeleccionada, Dieta dietaSeleccionada) {
         dietaCambio=dietaSeleccionada;
         Dieta inserccionDieta= new Dieta();
-        inserccionDieta.setId_dieta(dietaSeleccionada.getId_dieta());
-
+        inserccionDieta=dietaSeleccionada;
 
         //Llamo al metodo para realizar el cambio.
 
-        DatabaseReference dbUpdateDieta = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
+        dbUpdateDieta = FirebaseDatabase.getInstance().getReference().child("User").child(uidUser);
         dbUpdateDieta.child("dieta").setValue(inserccionDieta);
         dbUpdateDieta.child("objetivo").setValue(objetivoSeleccionado);
         userSinDieta=false;
@@ -340,13 +399,9 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
     }
     public void traducePlatos(){
 
-        DatabaseReference dbPlatos = FirebaseDatabase.getInstance().getReference().child("Plato");
+        dbPlatos = FirebaseDatabase.getInstance().getReference().child("Plato");
 
-        //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener;
-
-        eventListener = new ValueEventListener() {
+        eventListener3 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -381,7 +436,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
         };
 
-        dbPlatos.addValueEventListener(eventListener);
+        dbPlatos.addValueEventListener(eventListener3);
 
     }
 
@@ -426,58 +481,20 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
     public void muestraDiaDieta(int id_dia){
 
-        boolean vacio=true;
+        listaPlatos = new ArrayList<>();
+        listaPlatos.clear();
 
-        final ArrayList<Dieta_Plato>dietaPlatos = new ArrayList<>();
-
-        diaDieta=1;
-        dietaPlatos.clear();
-        ArrayList<Plato>platosDia = new ArrayList<>();
-
-        for(int i=0;i<7;i++){
-            for(int j=0;j<dietaRecuperada.getPlato().size();j++){
-                if(dietaRecuperada.getPlato().get(j).getDia_semana()==diaDieta){
-                    dietaPlatos.add(dietaRecuperada.getPlato().get(j));
+            for (int j = 0; j < dietaRecuperada.getPlato().size(); j++) {
+                if (dietaRecuperada.getPlato().get(j).getDia_semana() == id_dia) {
+                    listaPlatos.add(dietaRecuperada.getPlato().get(j));
                 }
             }
 
-            //Recupero y filtro los ejercicios
+        listaPlatoFiltrado.clear();
 
-            platosDia=recuperarPlato(dietaPlatos);
-
-            //Llamo al dialogo y le paso los ejercicios filtrados
-
-            //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get() y el ejercicio seleccionado
-
-            //Bucle para mostrar los valores del array
-
-                    /*for(int q=0;q<rutinaEjercicios.size();q++) {
-                        Toasty.info(RutinasActivity.this, Integer.toString(rutinaEjercicios.get(q).getId_ejercicio()), Toast.LENGTH_SHORT).show();
-                    }*/
-
-
-
-
-
-
-
-        }
-
-        if(vacio==true){
-            Toasty.info(DietasActivity.this,"Este dia no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public ArrayList<Plato>recuperarPlato(final ArrayList<Dieta_Plato> dia_dieta){
-
-        DatabaseReference dbDietas = FirebaseDatabase.getInstance().getReference().child("Dieta");
+        dbDietas = FirebaseDatabase.getInstance().getReference().child("Plato");
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
-
-        ValueEventListener eventListener4;
-
-        listaPlato.clear();
 
         eventListener4 = new ValueEventListener() {
             @Override
@@ -486,11 +503,11 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
                 GenericTypeIndicator<ArrayList<Plato>> t = new GenericTypeIndicator<ArrayList<Plato>>() {};
                 listaPlato = dataSnapshot.getValue(t);
 
-                for(int i=0;i<dia_dieta.size();i++){
+                for(int i=0;i<listaPlatos.size();i++){
 
                     for(int j=1;j<listaPlato.size();j++){
 
-                        if(dia_dieta.get(i).getId_plato()==listaPlato.get(j).getId_plato()){
+                        if(listaPlatos.get(i).getId_plato()==listaPlato.get(j).getId_plato()){
                             listaPlatoFiltrado.add(listaPlato.get(j));
                         }
 
@@ -498,9 +515,7 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
                 }
 
-                for(int q=0;q<listaPlatoFiltrado.size();q++){
-                    Toasty.info(DietasActivity.this,listaPlatoFiltrado.get(q).getNombre(),Toast.LENGTH_SHORT).show();
-                }
+                recuperarPlato(listaPlatoFiltrado);
 
             }
 
@@ -512,8 +527,36 @@ public class DietasActivity extends AppCompatActivity implements DialogInterface
 
         dbDietas.addValueEventListener(eventListener4);
 
-        return listaPlatoFiltrado;
+    }
 
+    public void recuperarPlato(final ArrayList<Plato> platosDelDia){
+        transaction = getFragmentManager().beginTransaction();
+        muestraPlatos=new MuestraListView_Dialog(null,null, null,platosDelDia);
+        muestraPlatos.setDialogMuestrasListener(this);
+        muestraPlatos.setCancelable(false);
+        muestraPlatos.show(transaction,null);
+    }
+
+
+    public void cerrarConexiones(){
+        try {
+            dbObjetivos.removeEventListener(eventListener);
+            db.removeEventListener(eventListenerDb);
+            dbDieta2.removeEventListener(eventListenerDietas);
+            dbPlatos.removeEventListener(eventListener3);
+            dbDietas.removeEventListener(eventListener4);
+            dbComida.removeEventListener(eventListenerComida);
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        cerrarConexiones();
+        finish();
+        super.onBackPressed();
     }
 
 }
