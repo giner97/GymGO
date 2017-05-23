@@ -108,17 +108,17 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
                 //Condicionales del campo pass
                 if(passRegistro.getText().toString().isEmpty()) {
-                    passRegistro.setError("El campo de la contraseña esta vacio");
+                    passRegistro.setError("El campo de la contraseña esta vacío");
                 }
                 else if(passRegistro.getText().toString().length()<6){
-                    passRegistro.setError("La contraseña debe tener 6 caracteres como mínimo");
+                    passRegistro.setError("La contraseña debe tener 6 carácteres como mínimo");
                 }
                 else{
                     passRegistro.setError(null);
                 }
                 //Condicionales del campo email
                 if(emailRegistro.getText().toString().isEmpty()){
-                    emailRegistro.setError("El campo del email esta vacio");
+                    emailRegistro.setError("El campo del email esta vacío");
                 }
                 else if(!emailRegistro.getText().toString().contains("@")||!emailRegistro.getText().toString().contains(".")){
                     emailRegistro.setError("El email introducido no es válido");
@@ -132,7 +132,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                     passRegistro.setError("Las contraseñas no coinciden");
                 }
                 else if(repetirPass.getText().toString().isEmpty()){
-                    repetirPass.setError("El campo de repetir la contraseña esta vacio");
+                    repetirPass.setError("El campo de repetir la contraseña esta vacío");
                 }
 
             }

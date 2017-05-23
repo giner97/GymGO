@@ -69,7 +69,7 @@ public class CambiarEmailDialog extends DialogFragment implements View.OnClickLi
             if(nuevoMail.getText().toString().isEmpty()||!nuevoMail.getText().toString().contains("@")||!nuevoMail.getText().toString().contains(".")){
                 //Condicionales del campo email
                 if(nuevoMail.getText().toString().isEmpty()){
-                    nuevoMail.setError("El campo del email esta vacio");
+                    nuevoMail.setError("El campo del email esta vacío");
                 }
                 else if(!nuevoMail.getText().toString().contains("@")||!nuevoMail.getText().toString().contains(".")){
                     nuevoMail.setError("El email introducido no es válido");

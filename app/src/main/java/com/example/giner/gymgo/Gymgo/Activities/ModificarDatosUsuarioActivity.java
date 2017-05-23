@@ -221,7 +221,7 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
             else{
 
-                Toasty.warning(this, "Te has dejado algun campo vacio", Toast.LENGTH_SHORT).show();
+                Toasty.warning(this, "Te has dejado algún campo vacío", Toast.LENGTH_SHORT).show();
 
             }
 

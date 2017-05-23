@@ -110,7 +110,7 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Altura: "
+                        android:text="Altura (m): "
                         android:textSize="20dp" />
 
                     <EditText
@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="Introduce la altura (Metros)"
+                        android:hint="Introduce la altura"
                         android:inputType="numberDecimal" />
 
                 </TableRow>

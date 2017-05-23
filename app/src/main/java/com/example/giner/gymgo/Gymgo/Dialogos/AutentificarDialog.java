@@ -90,17 +90,17 @@ public class AutentificarDialog extends DialogFragment implements View.OnClickLi
             if(email.getText().toString().isEmpty()||pass.getText().toString().isEmpty()||pass.getText().toString().length()<6||!email.getText().toString().contains("@")||!email.getText().toString().contains(".")){
                 //Condicionales del campo pass
                 if(pass.getText().toString().isEmpty()) {
-                    pass.setError("El campo de la contraseña esta vacio");
+                    pass.setError("El campo de la contraseña esta vacío");
                 }
                 else if(pass.getText().toString().length()<6){
-                    pass.setError("La contraseña debe tener 6 caracteres como mínimo");
+                    pass.setError("La contraseña debe tener 6 carácteres como mínimo");
                 }
                 else{
                     pass.setError(null);
                 }
                 //Condicionales del campo email
                 if(email.getText().toString().isEmpty()){
-                    email.setError("El campo del email esta vacio");
+                    email.setError("El campo del email esta vacío");
                 }
                 else if(!email.getText().toString().contains("@")||!email.getText().toString().contains(".")){
                     email.setError("El email introducido no es válido");

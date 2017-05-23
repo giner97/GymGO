@@ -136,7 +136,7 @@ public class RecuperarPassActivity extends AppCompatActivity implements View.OnC
             if(mEmailView.getText().toString().isEmpty()||!mEmailView.getText().toString().contains("@")||!mEmailView.getText().toString().contains(".")){
                 //Condicionales del campo email
                 if(mEmailView.getText().toString().isEmpty()){
-                    mEmailView.setError("El campo del email esta vacio");
+                    mEmailView.setError("El campo del email esta vacío");
                 }
                 else if(!mEmailView.getText().toString().contains("@")||!mEmailView.getText().toString().contains(".")){
                     mEmailView.setError("El email introducido no es válido");
@@ -153,7 +153,7 @@ public class RecuperarPassActivity extends AppCompatActivity implements View.OnC
                     public void onComplete(@NonNull Task<Void> task) {
                         showProgress(false);
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "Email de recuperacion de contraseña ha sido enviado");
+                            Log.d(TAG, "Email de recuperación de contraseña ha sido enviado");
                             Toasty.info(RecuperarPassActivity.this, "El email ha sido enviado al correo. Comprueba el correo y cambia la contraseña", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {

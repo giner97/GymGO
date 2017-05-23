@@ -99,7 +99,7 @@ public class MuestraDatos_Dialog extends DialogFragment{
                 RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.fragmento_muestra, null, false);
 
                 TextView dia = (TextView) relativeLayout.findViewById(R.id.dia);
-                dia.setText("Dia " + (j + 1));
+                dia.setText("Día " + (j + 1));
 
                 TextView dato1 = (TextView) relativeLayout.findViewById(R.id.dato1);
                 dato1.setText("Desayuno: "+platosDieta.get(0+multiplicador));

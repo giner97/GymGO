@@ -23,7 +23,7 @@
             android:layout_marginRight="20dp"
             android:gravity="center"
             android:layout_marginTop="100dp"
-            android:text="¿Estas seguro de si quieres saber si te sobran alguno Kilos o no? "
+            android:text="¿Estas seguro de que quieres saber si te sobran alguno Kilos o no? "
             android:textColor="@android:color/holo_red_dark"
             android:textStyle="bold"/>
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:gravity="center"
-            android:text="Pulsa el boton para descubrirlo"
+            android:text="Pulsa el botón para descubrirlo"
             android:layout_margin="20dp"
             android:textColor="@android:color/holo_red_dark"
             android:textStyle="bold"

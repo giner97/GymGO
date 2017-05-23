@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Log.d(TAG, "Reautentificacion realizada");
+                    Log.d(TAG, "Reautentificación realizada");
 
                     if(claveAccion==claveEliminarUsuario){
                         eliminarUsuario();
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 else{
-                    Log.d(TAG, "Fallo en la reautentificacion");
+                    Log.d(TAG, "Fallo en la reautentificación");
                     Toasty.error(MainActivity.this, task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity
                     Toasty.success(MainActivity.this, "Usuario eliminado", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Log.d(TAG,"Fallo en la eliminacion del usuario");
+                    Log.d(TAG,"Fallo en la eliminación del usuario");
                     Toasty.error(MainActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
             }

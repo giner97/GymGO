@@ -44,7 +44,7 @@ public class numDias_Dialog extends DialogFragment {
         //Construimos el dialogo
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Introduce el numero de dias");
+            builder.setTitle("Introduce el número de días");
             View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_nums,null);
 
         //Instancio los objetos
@@ -71,7 +71,7 @@ public class numDias_Dialog extends DialogFragment {
                             escuchador.finalizaActivity();
                             dismiss();
                         }
-                        Toasty.error(getActivity(), "El numero introducido es incorrecto", Toast.LENGTH_SHORT).show();
+                        Toasty.error(getActivity(), "El número introducido es incorrecto", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -81,7 +81,7 @@ public class numDias_Dialog extends DialogFragment {
                         escuchador.finalizaActivity();
                         dismiss();
                     }
-                    Toasty.error(getActivity(), "Te has dejado el campo vacio", Toast.LENGTH_SHORT).show();
+                    Toasty.error(getActivity(), "Te has dejado el campo vacío", Toast.LENGTH_SHORT).show();
                 }
 
             }

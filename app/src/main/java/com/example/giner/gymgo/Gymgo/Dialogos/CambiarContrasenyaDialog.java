@@ -70,10 +70,10 @@ public class CambiarContrasenyaDialog extends DialogFragment implements View.OnC
             if(nuevaPass.getText().toString().isEmpty()||nuevaPass.getText().toString().length()<6){
                 //Condicionales del campo pass
                 if(nuevaPass.getText().toString().isEmpty()) {
-                    nuevaPass.setError("El campo de la contraseña esta vacio");
+                    nuevaPass.setError("El campo de la contraseña esta vacío");
                 }
                 else if(nuevaPass.getText().toString().length()<6){
-                    nuevaPass.setError("La contraseña debe tener 6 caracteres como mínimo");
+                    nuevaPass.setError("La contraseña debe tener 6 carácteres como mínimo");
                 }
                 else{
                     nuevaPass.setError(null);

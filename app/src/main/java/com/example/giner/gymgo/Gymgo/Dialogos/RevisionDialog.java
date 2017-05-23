@@ -44,7 +44,7 @@ public class RevisionDialog extends DialogFragment {
             //Contruimos el dialogo
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Introduce los datos para la revision");
+                builder.setTitle("Introduce los datos para la revisión");
                 View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_imc,null);
 
             //Instancio los objetos

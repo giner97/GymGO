@@ -8,12 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.example.giner.gymgo.Gymgo.Dialogos.DatosPlatoDialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraDatos_Dialog;
 import com.example.giner.gymgo.Gymgo.Dialogos.MuestraListView_Dialog;
 import com.example.giner.gymgo.Objetos.Dieta;
@@ -33,6 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import es.dmoral.toasty.Toasty;
 
 public class DietasActivity extends AppCompatActivity implements View.OnClickListener, MuestraListView_Dialog.DialogMuestrasListener, MuestraDatos_Dialog.OnListener{
 
@@ -82,19 +86,14 @@ public class DietasActivity extends AppCompatActivity implements View.OnClickLis
     private ArrayList<Dieta> dietasArray = new ArrayList<>();
     private ArrayList<Dieta> dietasFiltradas = new ArrayList<>();
     private MuestraDatos_Dialog dialogoMuestraDietas;
+    private DatosPlatoDialog datosPlatoDialog;
     private ArrayList<String>platosDieta;
     private Dieta dietaCambio;
-    private Dieta dietaUsuario;
     private Dieta dietaRecuperada;
     private int objetivoRecuperado;
     private Boolean userSinDieta;
     private ArrayList<Plato> listaPlato = new ArrayList<>();
     private ArrayList<Plato> listaPlatoFiltrado = new ArrayList<>();
-
-
-    FirebaseUser usuarioActual;
-    int numRecuperados;
-    private int diaDietas;
 
 
     //Firebase firebase;
@@ -339,7 +338,7 @@ public class DietasActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onMuestraPlato(Plato plato) {
+    public void onMuestraPlato(final Plato plato) {
 
         for(int i=0;i<listaPlatoFiltrado.size();i++){
             if(listaPlatoFiltrado.get(i).getId_plato()==plato.getId_plato()){
@@ -347,32 +346,33 @@ public class DietasActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
 
-        //Recupero el grupo muscular
+        //Recupero el tipo comida
 
-        //dbGrupo = FirebaseDatabase.getInstance().getReference().child("Tipo_comida").child(Integer.toString(platos.getGrupo_muscular()));
+            dbComida = FirebaseDatabase.getInstance().getReference().child("Tipo_comida").child(Integer.toString(dietaplato.getTipo_comida()));
 
         //Escuchador para controlar cuando se modifican los datos en la bd, notificarlo a la aplicacion
 
-        /*eventListenerGrupo = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String grupoMuscular=dataSnapshot.child("nombre_grupoMuscular").getValue(String.class);
+            eventListenerComida = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //Llamo a otro dialogo para mostrar los datos del ejercicio seleccionado. Le paso rutinaEjercicio.getEjercicio.get(), el ejercicio seleccionado y el grupo muscular
-/*
-                transaction = getFragmentManager().beginTransaction();
-                datosEjercicio = new DatosEjercicioDialog(platos,listaPlato,grupoMuscular);
-                datosEjercicio.show(transaction,null);*/
+                    String tipoComida=dataSnapshot.child("nombre").getValue(String.class);
 
-           /* }
+                    //Llamo a otro dialogo para mostrar los datos del plato seleccionado.
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    transaction = getFragmentManager().beginTransaction();
+                    datosPlatoDialog = new DatosPlatoDialog(plato,tipoComida);
+                    datosPlatoDialog.show(transaction,null);
 
-            }
-        };
+                }
 
-        dbGrupo.addValueEventListener(eventListenerGrupo);*/
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+
+        dbComida.addValueEventListener(eventListenerComida);
 
     }
 

@@ -663,7 +663,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             if(vacio==true){
-                Toasty.info(RutinasActivity.this,"Este dia no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
+                Toasty.info(RutinasActivity.this,"Este día no esta asignado en tu rutina",Toast.LENGTH_SHORT).show();
             }
 
         }
