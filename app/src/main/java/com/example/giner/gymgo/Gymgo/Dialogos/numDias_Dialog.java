@@ -44,7 +44,7 @@ public class numDias_Dialog extends DialogFragment {
         //Construimos el dialogo
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Introduce el número de días");
+            builder.setTitle("Introduce el número de días a la semana");
             View customDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_nums,null);
 
         //Instancio los objetos

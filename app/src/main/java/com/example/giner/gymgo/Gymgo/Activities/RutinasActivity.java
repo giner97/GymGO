@@ -270,7 +270,7 @@ public class RutinasActivity extends AppCompatActivity implements View.OnClickLi
         items[5] = "Sabado";
         items[6] = "Domingo";
 
-        builder.setTitle("Selecciona los dias").setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setTitle("Selecciona los días").setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
                 if(isChecked){
