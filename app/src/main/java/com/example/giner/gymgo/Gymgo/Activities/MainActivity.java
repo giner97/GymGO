@@ -28,6 +28,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -280,8 +283,21 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 else{
-                    Log.d(TAG, "Fallo en la reautentificación");
-                    Toasty.error(MainActivity.this, task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    try{
+                        throw task.getException();
+                    }
+
+                    catch(FirebaseAuthInvalidCredentialsException e) {
+                        Toasty.error(MainActivity.this,"El email o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                    }
+
+                    catch(FirebaseAuthInvalidUserException e) {
+                        Toasty.error(MainActivity.this,"El email no existe", Toast.LENGTH_SHORT).show();
+                    }
+
+                    catch (Exception e){
+                        Toasty.error(MainActivity.this,"Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -299,7 +315,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else{
                     Log.d(TAG, "No se ha podido cambiar la contraseña");
-                   Toasty.error(MainActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                   Toasty.error(MainActivity.this,"No se ha podido cambiar la contraseña", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -312,12 +328,24 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    DatabaseReference dbUpdateRutina = FirebaseDatabase.getInstance().getReference().child("User").child(userLogueado.getUid());
+                    dbUpdateRutina.child("email").setValue(email);
                     Log.d(TAG, "El email ha sido cambiado correctamente");
                     Toasty.success(MainActivity.this, "El email ha sido cambiado", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Log.d(TAG, "No se ha podido cambiar el email");
-                    Toasty.error(MainActivity.this, task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    try{
+                        throw task.getException();
+                    }
+                    catch(FirebaseAuthUserCollisionException e){
+                        Toasty.error(MainActivity.this,"El email introducido está en uso", Toast.LENGTH_SHORT).show();
+                    }
+
+                    catch(Exception e){
+                        Toasty.error(MainActivity.this,"No se ha podido cambiar el correo", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -338,7 +366,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else{
                     Log.d(TAG,"Fallo en la eliminación del usuario");
-                    Toasty.error(MainActivity.this,task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    Toasty.error(MainActivity.this,"No se ha podido eliminar el usuario", Toast.LENGTH_SHORT).show();
                 }
             }
         });

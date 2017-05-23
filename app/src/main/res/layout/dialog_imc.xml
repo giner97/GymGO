@@ -19,7 +19,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
-                android:layout_weight="1"
                 android:text="Peso: "
                 android:textSize="20dp" />
 
@@ -30,7 +29,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
                 android:ems="10"
                 android:hint="Introduce tu peso"
                 android:inputType="numberDecimal" />
@@ -47,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:text="Altura (m): "
                 android:textSize="20dp" />
 
@@ -59,7 +56,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
                 android:ems="10"
                 android:hint="Introduce tu altura"
                 android:inputType="numberDecimal" />

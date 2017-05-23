@@ -50,6 +50,7 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         private ValueEventListener eventListener2;
         private DatabaseReference dbObjetivos;
         private ValueEventListener eventListener;
+        private ArrayList<Objetivo> objetivo;
 
 
     @Override
@@ -72,20 +73,20 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         userLogueado = FirebaseAuth.getInstance().getCurrentUser();
             idUserLogueado=userLogueado.getUid();
 
-        dbUsuarios = FirebaseDatabase.getInstance().getReference().child("User").child(idUserLogueado);
+        dbUsuarios = FirebaseDatabase.getInstance().getReference();
 
         eventListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if((dataSnapshot.child("apellidos").getValue()!=null)||(dataSnapshot.child("nombre").getValue()!=null)) {
+                if((dataSnapshot.child("User").child(idUserLogueado).child("apellidos").getValue()!=null)||(dataSnapshot.child("User").child(idUserLogueado).child("nombre").getValue()!=null)) {
 
                     if(finish==false) {
 
-                        nombre = dataSnapshot.child("nombre").getValue().toString();
-                        altura = Double.parseDouble(dataSnapshot.child("altura").getValue().toString());
-                        peso = Double.parseDouble(dataSnapshot.child("peso").getValue().toString());
-                        apellidos = dataSnapshot.child("apellidos").getValue().toString();
+                        nombre = dataSnapshot.child("User").child(idUserLogueado).child("nombre").getValue().toString();
+                        altura = Double.parseDouble(dataSnapshot.child("User").child(idUserLogueado).child("altura").getValue().toString());
+                        peso = Double.parseDouble(dataSnapshot.child("User").child(idUserLogueado).child("peso").getValue().toString());
+                        apellidos = dataSnapshot.child("User").child(idUserLogueado).child("apellidos").getValue().toString();
 
                         cargaDatos();
 
@@ -93,17 +94,28 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
                 }
 
-                else if((dataSnapshot).child("peso").getValue(Double.class)>0||(dataSnapshot.child("altura").getValue(Double.class)>0)){
+                else if((dataSnapshot.child("User").child(idUserLogueado).child("peso").getValue(Double.class)>0)||(dataSnapshot.child("User").child(idUserLogueado).child("altura").getValue(Double.class)>0)){
 
                     if(finish==false){
-                        altura = Double.parseDouble(dataSnapshot.child("altura").getValue().toString());
-                        peso = Double.parseDouble(dataSnapshot.child("peso").getValue().toString());
+                        altura = Double.parseDouble(dataSnapshot.child("User").child(idUserLogueado).child("altura").getValue().toString());
+                        peso = Double.parseDouble(dataSnapshot.child("User").child(idUserLogueado).child("peso").getValue().toString());
                         lblaltura.setText(Double.toString(altura));
                         lblpeso.setText(Double.toString(peso));
                     }
                 }
 
-                objetivoSeleccionado = Integer.valueOf(dataSnapshot.child("objetivo").getValue().toString());
+                objetivoSeleccionado = Integer.valueOf(dataSnapshot.child("User").child(idUserLogueado).child("objetivo").getValue().toString());
+
+                GenericTypeIndicator<ArrayList<Objetivo>> t = new GenericTypeIndicator<ArrayList<Objetivo>>() {};
+
+                objetivo = dataSnapshot.child("Objetivo").getValue(t);
+
+                if(objetivoSeleccionado!=0){
+                    seleccionarObjetivo.setText(objetivo.get(objetivoSeleccionado).getDescripcion());
+                }
+                else{
+                    seleccionarObjetivo.setText("Seleccionar objetivo");
+                }
 
             }
 
@@ -240,6 +252,8 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
 
     public void muestraDialogObjetivo(){
 
+        objetivoSelecc=0;
+
         ///Creo el dialogo
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ModificarDatosUsuarioActivity.this);
@@ -253,7 +267,14 @@ public class ModificarDatosUsuarioActivity extends AppCompatActivity implements 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+                objetivoSeleccionado=0;
                 objetivoSeleccionado = objetivoSelecc+1;
+                if(objetivoSeleccionado!=0){
+                    seleccionarObjetivo.setText(objetivo.get(objetivoSeleccionado).getDescripcion());
+                }
+                else{
+                    seleccionarObjetivo.setText("Seleccionar objetivo");
+                }
             }
         });
 

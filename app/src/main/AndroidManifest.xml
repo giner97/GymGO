@@ -15,10 +15,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logogymgo"
         android:supportsRtl="true"
+        android:windowSoftInputMode="stateHidden"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Gymgo.Activities.LoginActivity"
             android:label="GymGO"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +31,7 @@
         <activity
             android:name=".Gymgo.Activities.RegistroActivity"
             android:label="Registrar usuario"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Gymgo.Activities.MainActivity"
@@ -38,22 +41,28 @@
         <activity
             android:name=".Gymgo.Activities.RecuperarPassActivity"
             android:label="Recuperar contraseña"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Gymgo.Activities.ModificarDatosUsuarioActivity"
             android:label="Modifica datos"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"/>
         <activity android:name=".Gymgo.Activities.RutinasActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:label="Rutinas"/>
         <activity android:name=".Gymgo.Activities.DietasActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:label="Dietas"/>
         <activity android:name=".Gymgo.Activities.RevisionesActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:label="Revisiones"/>
         <activity android:name=".Gymgo.Activities.PGCActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:label="Porcentaje de Grasa Corporal"></activity>
     </application>
 

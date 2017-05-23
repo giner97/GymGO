@@ -451,25 +451,25 @@ public class DietasActivity extends AppCompatActivity implements View.OnClickLis
 
         //Convertimos el nombre del dia en el id
 
-        if((diaNombre.equals("Monday"))||(diaNombre.equals("Lunes"))){
+        if((diaNombre.equals("Monday"))||(diaNombre.equals("lunes"))){
             idDia=0;
         }
-        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("Martes"))){
+        else if((diaNombre.equals("Tuesday"))||(diaNombre.equals("martes"))){
             idDia=1;
         }
-        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("Miercoles"))){
+        else if((diaNombre.equals("Wednesday"))||(diaNombre.equals("miércoles"))){
             idDia=2;
         }
-        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("Jueves"))){
+        else if((diaNombre.equals("Thursday"))||(diaNombre.equals("jueves"))){
             idDia=3;
         }
-        else if((diaNombre.equals("Friday"))||(diaNombre.equals("Viernes"))){
+        else if((diaNombre.equals("Friday"))||(diaNombre.equals("viernes"))){
             idDia=4;
         }
-        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("Sabado"))){
+        else if((diaNombre.equals("Saturday"))||(diaNombre.equals("sábado"))){
             idDia=5;
         }
-        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("Domingo"))){
+        else if((diaNombre.equals("Sunday"))||(diaNombre.equals("domingo"))){
             idDia=6;
         }
 
